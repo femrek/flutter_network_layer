@@ -1,4 +1,4 @@
-package me.femrek.flutter_toemplete_network_layer
+package me.femrek.flutter_template_network_layer
 
 import io.flutter.embedding.android.FlutterActivity
 

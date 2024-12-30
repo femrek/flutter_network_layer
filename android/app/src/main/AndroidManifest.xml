@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="flutter_toemplete_network_layer"
+        android:label="flutter_template_network_layer"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
