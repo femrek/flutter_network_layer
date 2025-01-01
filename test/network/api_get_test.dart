@@ -1,3 +1,4 @@
+import 'package:flutter_template_network_layer/product/network/request/request_get_post.dart';
 import 'package:flutter_template_network_layer/product/network/request/request_get_todo.dart';
 import 'package:flutter_template_network_layer/product/network/request/request_get_todos.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,7 +8,7 @@ void main() async {
   final nm = DioNetworkManager(
     onDioLog: (level, message) {
       // ignore: avoid_print logger
-      print('[${level.name}] $message');
+      print('API GET TEST: [${level.name}] $message');
     },
   );
   await nm.init('https://jsonplaceholder.typicode.com');
@@ -41,6 +42,23 @@ void main() async {
         },
         error: (response) {
           fail('Failed to get todos');
+        },
+      );
+    });
+  });
+
+  group('GET request to post api', () {
+    test('GET a post', () async {
+      const postId = 1;
+      final response = await nm.request(const RequestGetPost(id: postId));
+      expect(response, isNotNull);
+
+      response.when(
+        success: (response) {
+          expect(response.data.id, postId, reason: 'Expected post: $postId');
+        },
+        error: (response) {
+          fail('Failed to get post: $postId');
         },
       );
     });

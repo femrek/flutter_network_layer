@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_template_network_layer/product/network/request/request_get_post.dart';
 import 'package:flutter_template_network_layer/product/network/request/request_get_todo.dart';
 import 'package:flutter_template_network_layer/product/network/request/request_get_todos.dart';
+import 'package:flutter_template_network_layer/product/network/request/request_post_post.dart';
 import 'package:get_it/get_it.dart';
 import 'package:network/network.dart';
 
@@ -48,6 +50,44 @@ class _ScreenHomeState extends State<ScreenHome> {
     );
   }
 
+  Future<void> _getPost1() async {
+    final response =
+        await GetIt.I<INetworkManager>().request(const RequestGetPost(id: 1));
+    response.when(
+      success: (response) {
+        setState(() {
+          _data = response.data.toString();
+        });
+      },
+      error: (response) {
+        setState(() {
+          _data = 'Failed to get post 1';
+        });
+      },
+    );
+  }
+
+  Future<void> _postAPost() async {
+    final response =
+        await GetIt.I<INetworkManager>().request(const RequestPostPost(
+      userId: 1,
+      title: 'foo',
+      body: 'bar',
+    ));
+    response.when(
+      success: (response) {
+        setState(() {
+          _data = response.data.toString();
+        });
+      },
+      error: (response) {
+        setState(() {
+          _data = 'Failed to post a post';
+        });
+      },
+    );
+  }
+
   String _data = '';
 
   @override
@@ -68,6 +108,14 @@ class _ScreenHomeState extends State<ScreenHome> {
               ElevatedButton(
                 onPressed: _getTodos,
                 child: const Text('get todos'),
+              ),
+              ElevatedButton(
+                onPressed: _getPost1,
+                child: const Text('get post 1'),
+              ),
+              ElevatedButton(
+                onPressed: _postAPost,
+                child: const Text('post a post'),
               ),
               Text(_data),
             ],
