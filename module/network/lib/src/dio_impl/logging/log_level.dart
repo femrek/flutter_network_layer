@@ -1,27 +1,35 @@
-/// Enum for log level that can be used in the logger of the application.
+/// Enum for log level that can be used in the logger of the dio implementation.
 enum LogLevel {
-  /// Trace log level. Used for logging at the start and end of functions.
-  trace('TRACE'),
+  /// Log level for trace logs.
+  trace(maySensitiveData: false),
 
-  /// Debug log level. Used for logging detailed information.
-  debug('DEBUG'),
+  /// The log level that is used for printing the success responses.
+  successResponse(maySensitiveData: true),
 
-  /// Info log level. Used for logging general information. (e.g.
-  /// initializations)
-  info('INFO'),
+  /// The log level that is used for printing the error responses.
+  errorResponse(maySensitiveData: true),
 
-  /// Warn log level. Used for logging warnings.
-  warn('WARN'),
+  /// The log level that is used for printing the request that is prepared to
+  /// be sent.
+  request(maySensitiveData: true),
 
-  /// Error log level. Used for logging errors that should not occur.
-  error('ERROR'),
+  /// The log level that is used for printing when the network manager is
+  /// being initialized.
+  init(maySensitiveData: false),
 
-  /// Fatal log level. Used for logging errors that cannot be recovered from.
-  fatal('FATAL'),
+  /// The log level that is used for printing the errors that occur in the
+  /// local code.
+  internalError(maySensitiveData: false),
   ;
 
-  const LogLevel(this.name);
+  const LogLevel({
+    required this.maySensitiveData,
+  });
 
-  /// The name of the log level.
-  final String name;
+  /// Whether the log may contain sensitive data such as Authorization header,
+  /// etc.
+  ///
+  /// Relies on request paths and thrown errors to not contain sensitive
+  /// data.
+  final bool maySensitiveData;
 }

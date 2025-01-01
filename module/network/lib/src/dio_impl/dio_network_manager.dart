@@ -30,8 +30,8 @@ final class DioNetworkManager implements INetworkManager {
     LogInterceptor? logInterceptor,
   }) async {
     onDioLog(
-      LogLevel.info,
-      'DioNetworkManager initialized with baseUrl: $baseUrl',
+      LogLevel.trace,
+      'START: $_tag.init: $baseUrl',
     );
 
     _dio = Dio(
@@ -47,8 +47,12 @@ final class DioNetworkManager implements INetworkManager {
     }
 
     onDioLog(
-      LogLevel.info,
-      'DioNetworkManager initialized with baseUrl: $baseUrl',
+      LogLevel.init,
+      '$_tag initialized with baseUrl: $baseUrl',
+    );
+    onDioLog(
+      LogLevel.trace,
+      'END  : $_tag.init: $baseUrl',
     );
   }
 
@@ -57,7 +61,7 @@ final class DioNetworkManager implements INetworkManager {
       IRequestCommand<T> request) async {
     onDioLog(
       LogLevel.trace,
-      '$_tag.request: START: ${request.method.value} ${request.path}',
+      'START: $_tag.request: ${request.method.value} ${request.path}',
     );
 
     final result = await _request(request);
@@ -65,13 +69,13 @@ final class DioNetworkManager implements INetworkManager {
     result.when(
       success: (response) {
         onDioLog(
-          LogLevel.debug,
+          LogLevel.successResponse,
           'Response: ${response.statusCode} ${response.data.toJson()}',
         );
       },
       error: (response) {
         onDioLog(
-          LogLevel.warn,
+          LogLevel.errorResponse,
           'Response: ${response.statusCode} ${response.message}',
         );
       },
@@ -79,7 +83,7 @@ final class DioNetworkManager implements INetworkManager {
 
     onDioLog(
       LogLevel.trace,
-      '$_tag.request: END  : ${request.method.value} ${request.path}',
+      'END  : $_tag.request: ${request.method.value} ${request.path}',
     );
 
     return result;
@@ -101,6 +105,11 @@ final class DioNetworkManager implements INetworkManager {
       }
     }
 
+    onDioLog(
+      LogLevel.request,
+      'Request: ${request.method.value} ${request.path} payload: $payload',
+    );
+
     try {
       response = await _dio.request<dynamic>(
         request.path,
@@ -112,7 +121,11 @@ final class DioNetworkManager implements INetworkManager {
           headers: request.headers,
         ),
       );
-    } on Exception catch (e) {
+    } on Exception catch (e, s) {
+      onDioLog(
+        LogLevel.internalError,
+        'Request failed exception: $e $s',
+      );
       return ErrorResponseResult.noResponse(
         message: 'Request failed: $e',
       );
@@ -122,8 +135,12 @@ final class DioNetworkManager implements INetworkManager {
     final statusCode = response.statusCode;
 
     if (statusCode == null) {
+      onDioLog(
+        LogLevel.internalError,
+        'Status code of received response is null.',
+      );
       return ErrorResponseResult.noResponse(
-        message: 'Response code is null',
+        message: 'Response status code is null',
       );
     }
     if (responseData == null) {
@@ -133,18 +150,24 @@ final class DioNetworkManager implements INetworkManager {
       );
     }
     if (responseData is! String) {
+      onDioLog(
+        LogLevel.internalError,
+        'Invalid response type. Response data is expected to be String. '
+        'Response type: ${responseData.runtimeType}',
+      );
       return ErrorResponseResult.withResponse(
-        message: 'Invalid response type. Response data is not String.'
-            '\nResponse data: <${responseData.runtimeType}> [$statusCode]'
-            '\n$responseData',
+        message: 'Invalid response type. Response data is not String. '
+            'Response type: ${responseData.runtimeType} '
+            'Response: [$statusCode] $responseData',
         statusCode: statusCode,
       );
     }
     if (statusCode < 200 || statusCode >= 300) {
       return ErrorResponseResult.withResponse(
-        message: 'Response status is not successful.'
-            '\nResponse data: <${responseData.runtimeType}> [$statusCode]'
-            '\n$responseData',
+        message: 'Response status is not successful. '
+            'Response type: ${responseData.runtimeType} '
+            'Response status code: $statusCode '
+            'Response: $responseData',
         statusCode: statusCode,
       );
     }
@@ -159,7 +182,11 @@ final class DioNetworkManager implements INetworkManager {
         data: data,
         statusCode: statusCode,
       );
-    } on Exception catch (e) {
+    } on Exception catch (e, s) {
+      onDioLog(
+        LogLevel.internalError,
+        'Failed to parse response: $e $s',
+      );
       return ErrorResponseResult.withResponse(
         message: 'Failed to parse response: $e',
         statusCode: statusCode,

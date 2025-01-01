@@ -12,7 +12,11 @@ import 'data/test_paths.dart';
 void main() async {
   final networkManager = DioNetworkManager(
     onDioLog: (level, message) {
-      debugPrint('$level: $message');
+      debugPrint(
+        '${DateTime.now().toIso8601String()} '
+        '${level.name.toUpperCase()}: '
+        '$message',
+      );
     },
   );
 
