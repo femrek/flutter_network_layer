@@ -24,9 +24,9 @@ final class DioNetworkManager implements INetworkManager {
 
   static const String _tag = 'DioNetworkManager';
 
-  /// Initialize the network manager with the base url.
-  Future<void> init({
-    required String baseUrl,
+  @override
+  Future<void> init(
+    String baseUrl, {
     LogInterceptor? logInterceptor,
   }) async {
     onDioLog(

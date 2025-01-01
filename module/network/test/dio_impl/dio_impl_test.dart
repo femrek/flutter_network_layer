@@ -54,7 +54,7 @@ void main() async {
     fail('test server failed to start');
   }
 
-  await networkManager.init(baseUrl: 'http://localhost:${server.port}');
+  await networkManager.init('http://localhost:${server.port}');
 
   group('DioNetworkManager GET test', () {
     test('request success', () async {
