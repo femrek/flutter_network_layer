@@ -1,6 +1,6 @@
 # flutter_network_layer
 
-A package for Flutter projects to use as a network layer.
+A package to use as a network layer for Flutter projects.
 
 ## Table of Contents
 
