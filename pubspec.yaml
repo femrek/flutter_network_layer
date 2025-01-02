@@ -1,27 +1,21 @@
-name: flutter_template_network_layer
-description: "A new Flutter project."
+name: flutter_network_layer
+description: "A new Flutter package project."
 
 publish_to: 'none'
-version: 1.0.0+1
+version: 0.0.1
 
 environment:
   sdk: ^3.6.0
+  flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
-
-  # modules
-  network:
-    path: module/network
-
-  get_it: ^8.0.3
+  dio: ^5.7.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
   very_good_analysis: ^7.0.0
 
 flutter:
-  uses-material-design: true
