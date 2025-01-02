@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_template_network_layer/product/network/response/response_todo.dart';
 import 'package:network/network.dart';
 
 /// The response model for the todos response.
+@immutable
 final class ResponseTodoList implements IResponseModel {
   /// Create an instance of [ResponseTodoList].
   const ResponseTodoList({

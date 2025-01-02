@@ -18,7 +18,7 @@ class ScreenHome extends StatefulWidget {
 class _ScreenHomeState extends State<ScreenHome> {
   Future<void> _getTodo1() async {
     final response =
-        await GetIt.I<INetworkManager>().request(const RequestGetTodo(id: 1));
+        await GetIt.I<INetworkInvoker>().request(const RequestGetTodo(id: 1));
     response.when(
       success: (response) {
         setState(() {
@@ -35,7 +35,7 @@ class _ScreenHomeState extends State<ScreenHome> {
 
   Future<void> _getTodos() async {
     final response =
-        await GetIt.I<INetworkManager>().request(const RequestGetTodos());
+        await GetIt.I<INetworkInvoker>().request(const RequestGetTodos());
     response.when(
       success: (response) {
         setState(() {
@@ -52,7 +52,7 @@ class _ScreenHomeState extends State<ScreenHome> {
 
   Future<void> _getPost1() async {
     final response =
-        await GetIt.I<INetworkManager>().request(const RequestGetPost(id: 1));
+        await GetIt.I<INetworkInvoker>().request(const RequestGetPost(id: 1));
     response.when(
       success: (response) {
         setState(() {
@@ -69,7 +69,7 @@ class _ScreenHomeState extends State<ScreenHome> {
 
   Future<void> _postAPost() async {
     final response =
-        await GetIt.I<INetworkManager>().request(const RequestPostPost(
+        await GetIt.I<INetworkInvoker>().request(const RequestPostPost(
       userId: 1,
       title: 'foo',
       body: 'bar',

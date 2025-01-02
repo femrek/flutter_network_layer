@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:network/network.dart';
 
 void main() async {
-  final nm = DioNetworkManager(
+  final nm = DioNetworkInvoker(
     onDioLog: (level, message) {
       // ignore: avoid_print logger
       print('API GET TEST: [${level.name}] $message');

@@ -10,7 +10,7 @@ import 'data/response/response_test_user.dart';
 import 'data/test_paths.dart';
 
 void main() async {
-  final networkManager = DioNetworkManager(
+  final networkManager = DioNetworkInvoker(
     onDioLog: (level, message) {
       debugPrint(
         '${DateTime.now().toIso8601String()} '

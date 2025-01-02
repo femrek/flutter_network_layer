@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:network/network.dart';
 
 /// The response model for the post response.
+@immutable
 final class ResponsePost implements IResponseModel {
   /// Create an instance of [ResponsePost].
   const ResponsePost({

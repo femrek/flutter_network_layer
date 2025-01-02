@@ -6,7 +6,7 @@ import 'package:network/network.dart';
 class AppGetIt {
   /// Initialize the dependencies for the app.
   static void init() {
-    GetIt.I.registerLazySingleton<INetworkManager>(
-        AppNetworkInitializer.createNetworkManager);
+    GetIt.I.registerLazySingleton<INetworkInvoker>(
+        AppNetworkInitializer.createNetworkInvoker);
   }
 }

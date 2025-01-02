@@ -2,7 +2,7 @@ import 'package:flutter_template_network_layer/product/network/response/response
 import 'package:network/network.dart';
 
 /// The request command for fetching all todos.
-class RequestGetTodos implements IRequestCommand<ResponseTodoList> {
+final class RequestGetTodos implements IRequestCommand<ResponseTodoList> {
   /// Create an instance of [RequestGetTodos].
   const RequestGetTodos();
 

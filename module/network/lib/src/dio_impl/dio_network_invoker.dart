@@ -4,12 +4,12 @@ import 'package:dio/dio.dart';
 import 'package:network/network.dart';
 
 /// The network manager class for managing to api communication.
-final class DioNetworkManager implements INetworkManager {
-  /// Create a new instance of [DioNetworkManager].
+final class DioNetworkInvoker implements INetworkInvoker {
+  /// Create a new instance of [DioNetworkInvoker].
   ///
   /// [onDioLog] is a callback function to trigger when a log is received from
   /// this network manager.
-  DioNetworkManager({
+  DioNetworkInvoker({
     OnDioLog? onDioLog,
   }) {
     this.onDioLog = onDioLog ??= (_, __) {};

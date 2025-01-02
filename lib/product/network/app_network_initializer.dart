@@ -3,13 +3,13 @@ import 'package:network/network.dart';
 
 /// The network initializer for the app.
 ///
-/// Creates an [INetworkManager] for the app.
+/// Creates an [INetworkInvoker] for the app.
 abstract final class AppNetworkInitializer {
   /// Create a network manager.
   ///
-  /// Creates a [DioNetworkManager] with the default log callback.
-  static INetworkManager createNetworkManager() {
-    return DioNetworkManager(onDioLog: _onLog);
+  /// Creates a [DioNetworkInvoker] with the default log callback.
+  static INetworkInvoker createNetworkInvoker() {
+    return DioNetworkInvoker(onDioLog: _onLog);
   }
 
   static void _onLog(LogLevel level, String message) {

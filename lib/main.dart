@@ -6,7 +6,7 @@ import 'package:network/network.dart';
 
 void main() async {
   AppGetIt.init();
-  await GetIt.I.get<INetworkManager>().init(
+  await GetIt.I.get<INetworkInvoker>().init(
         'https://jsonplaceholder.typicode.com',
       );
   runApp(const App());
