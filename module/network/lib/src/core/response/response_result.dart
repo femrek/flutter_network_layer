@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:network/src/core/response/i_response_model.dart';
 
 /// The standard response result of a request.
@@ -6,14 +8,7 @@ sealed class ResponseResult<T extends IResponseModel> {
   int? get statusCode;
 
   /// Returns true if the response is a success, otherwise false.
-  ///
-  /// Also see [isError].
   bool get isSuccess;
-
-  /// Returns true if the response is an error, otherwise false.
-  ///
-  /// Also see [isSuccess].
-  bool get isError;
 
   /// Get the instance as [SuccessResponseResult] only if it is a success.
   /// Otherwise, it will throw an exception.
@@ -30,14 +25,31 @@ sealed class ResponseResult<T extends IResponseModel> {
   }
 
   /// Executes the given function based on the type of the response.
+  ///
+  /// See also [whenAsync].
   void when({
     required void Function(SuccessResponseResult<T> response) success,
     required void Function(ErrorResponseResult<T> response) error,
   }) {
-    if (this is SuccessResponseResult<T>) {
-      success(this as SuccessResponseResult<T>);
-    } else if (this is ErrorResponseResult<T>) {
-      error(this as ErrorResponseResult<T>);
+    if (isSuccess) {
+      success(asSuccess);
+    } else {
+      error(asError);
+    }
+  }
+
+  /// Executes the given async/sync function based on the type of the response.
+  ///
+  /// This is an asynchronous version of [when]. Allows to execute an async
+  /// process and wait for the result.
+  Future<void> whenAsync({
+    required FutureOr<void> Function(SuccessResponseResult<T> response) success,
+    required FutureOr<void> Function(ErrorResponseResult<T> response) error,
+  }) async {
+    if (isSuccess) {
+      await success(asSuccess);
+    } else {
+      await error(asError);
     }
   }
 }
@@ -61,9 +73,6 @@ final class SuccessResponseResult<T extends IResponseModel>
 
   @override
   final int statusCode;
-
-  @override
-  bool get isError => false;
 
   @override
   bool get isSuccess => true;
@@ -105,9 +114,6 @@ final class ErrorResponseResult<T extends IResponseModel>
 
   @override
   final int? statusCode;
-
-  @override
-  bool get isError => true;
 
   @override
   bool get isSuccess => false;
