@@ -1,4 +1,4 @@
-import 'package:flutter_network_layer/flutter_network_layer.dart';
+import 'package:flutter_network_layer_dio/flutter_network_layer_dio.dart';
 
 /// Callback for logging Dio requests and responses.
 typedef OnDioInvokerLog = void Function(
