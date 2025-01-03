@@ -1,7 +1,8 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_network_layer/flutter_network_layer.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 
 import 'data/request/request_test_not_found.dart';
 import 'data/request/request_test_user.dart';
@@ -10,14 +11,7 @@ import 'data/test_paths.dart';
 
 void main() async {
   final networkManager = DioNetworkInvoker(
-    onDioLog: (level, message) {
-      // ignore: avoid_print test
-      print(
-        '${DateTime.now().toIso8601String()} '
-        '${level.name.toUpperCase()}: '
-        '$message',
-      );
-    },
+    onLog: _onLog,
   );
 
   late HttpServer server;
@@ -56,7 +50,7 @@ void main() async {
 
   await networkManager.init('http://localhost:${server.port}');
 
-  group('DioNetworkManager GET test', () {
+  group('DioNetworkInvoker GET test', () {
     test('request success', () async {
       final response = await networkManager.request(RequestTestUser());
 
@@ -92,4 +86,136 @@ void main() async {
       );
     });
   });
+
+  group('DioNetworkInvoker interceptor test', () {
+    test('onRequest and onResponse', () async {
+      var onRequestRun = false;
+      var onResponseRun = false;
+
+      final request = RequestTestUser();
+      final networkManager = DioNetworkInvoker(
+        onLog: _onLog,
+        dioInterceptors: [
+          InterceptorsWrapper(
+            onRequest: (options, handler) {
+              onRequestRun = true;
+              expect(
+                options.path,
+                request.path,
+                reason: 'the request path should be ${request.path}',
+              );
+              handler.next(options);
+            },
+            onResponse: (response, handler) {
+              onResponseRun = true;
+              expect(
+                response.data.toString(),
+                contains('id'),
+                reason: 'the response should contain id field',
+              );
+              expect(
+                response.data.toString(),
+                contains('name'),
+                reason: 'the response should contain name field',
+              );
+              expect(
+                response.data.toString(),
+                contains('age'),
+                reason: 'the response should contain age field',
+              );
+              handler.next(response);
+            },
+            onError: (error, handler) {
+              fail('The request should result in success.');
+            },
+          ),
+        ],
+      );
+
+      await networkManager.init('http://localhost:${server.port}');
+
+      final response = await networkManager.request(request);
+
+      expect(onRequestRun, isTrue, reason: 'onRequest should run');
+      expect(onResponseRun, isTrue, reason: 'onResponse should run');
+
+      response.when(
+        success: (response) {
+          expect(response.data, isA<ResponseTestUser>());
+          expect(response.data.id, '1');
+          expect(response.data.name, 'test');
+          expect(response.data.age, 20);
+        },
+        error: (response) {
+          fail('error response: ${response.message}');
+        },
+      );
+    });
+
+    test('onRequest and onError', () async {
+      var onRequestRun = false;
+      var onErrorRun = false;
+
+      final request = RequestTestNotFound();
+      final networkManager = DioNetworkInvoker(
+        onLog: _onLog,
+        dioInterceptors: [
+          InterceptorsWrapper(
+            onRequest: (options, handler) {
+              onRequestRun = true;
+              expect(
+                options.path,
+                request.path,
+                reason: 'the request path should be ${request.path}',
+              );
+              handler.next(options);
+            },
+            onResponse: (response, handler) {
+              fail('The request should result in error.');
+            },
+            onError: (error, handler) {
+              onErrorRun = true;
+              expect(
+                error.response?.statusCode,
+                HttpStatus.notFound,
+                reason: 'the error should be 404',
+              );
+              handler.next(error);
+            },
+          ),
+        ],
+      );
+
+      await networkManager.init('http://localhost:${server.port}');
+
+      final response = await networkManager.request(request);
+
+      expect(onRequestRun, isTrue, reason: 'onRequest should run');
+      expect(onErrorRun, isTrue, reason: 'onError should run');
+
+      response.when(
+        success: (response) {
+          fail('success response: ${response.data}');
+        },
+        error: (response) {
+          expect(response.isFromServer, isTrue, reason: response.message);
+          expect(response.isFromLocal, isFalse, reason: response.message);
+          expect(
+            response.statusCode,
+            HttpStatus.notFound,
+            reason: response.message,
+          );
+        },
+      );
+    });
+  });
+}
+
+void _onLog(LogLevel level, String message) {
+  // ignore: avoid_print test
+  print(
+    '${DateTime.now().toIso8601String()} '
+    '${level.name.toUpperCase()}: '
+    '$message',
+  );
 }

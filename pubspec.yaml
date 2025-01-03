@@ -10,8 +10,6 @@ dependencies:
   dio: ^5.7.0
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
+  test: ^1.25.14
   very_good_analysis: ^7.0.0
 
-flutter:
