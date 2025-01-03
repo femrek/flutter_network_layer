@@ -24,19 +24,38 @@ jobs:
       # - uses: dart-lang/setup-dart@v1
       - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
 
-      - name: Install dependencies
-        run: dart pub get --no-example
+      - name: Install dependencies for core
+        run: dart pub get --no-example -C flutter_network_layer_core
+
+      - name: Install dependencies for dio impl
+        run: dart pub get --no-example -C flutter_network_layer_dio
+
+      - name: Install dependencies for bundle
+        run: dart pub get --no-example -C flutter_network_layer
 
       # Uncomment this step to verify the use of 'dart format' on each commit.
-      - name: Verify formatting
-        run: dart format --output=none --set-exit-if-changed lib
+      - name: Verify formatting for core
+        run: dart format --output=none --set-exit-if-changed flutter_network_layer_core/lib
+
+      - name: Verify formatting for dio impl
+        run: dart format --output=none --set-exit-if-changed flutter_network_layer_dio/lib
+
+      - name: Verify formatting for bundle
+        run: dart format --output=none --set-exit-if-changed flutter_network_layer/lib
 
       # Consider passing '--fatal-infos' for slightly stricter analysis.
-      - name: Analyze project source
-        run: dart analyze lib
+      - name: Analyze project source for core
+        run: dart analyze flutter_network_layer_core/lib
+
+      - name: Analyze project source for dio impl
+        run: dart analyze flutter_network_layer_dio/lib
+
+      - name: Analyze project source for bundle
+        run: dart analyze flutter_network_layer/lib
 
       # Your project will need to have tests in test/ and a dependency on
       # package:test for this step to succeed. Note that Flutter projects will
       # want to change this to 'flutter test'.
       - name: Run tests
-        run: dart test
+        run: cd flutter_network_layer && dart test
+
