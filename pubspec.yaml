@@ -1,8 +1,7 @@
 name: flutter_network_layer
-description: "A new Flutter package project."
-
-publish_to: 'none'
+description: "Network manager for Flutter applications"
 version: 0.0.1
+homepage: https://github.com/femrek/flutter_network_layer
 
 environment:
   sdk: ^3.6.0
