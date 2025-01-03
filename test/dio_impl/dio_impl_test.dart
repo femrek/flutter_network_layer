@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_network_layer/flutter_network_layer.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -12,7 +11,8 @@ import 'data/test_paths.dart';
 void main() async {
   final networkManager = DioNetworkInvoker(
     onDioLog: (level, message) {
-      debugPrint(
+      // ignore: avoid_print test
+      print(
         '${DateTime.now().toIso8601String()} '
         '${level.name.toUpperCase()}: '
         '$message',
