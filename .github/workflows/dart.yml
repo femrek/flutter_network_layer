@@ -57,5 +57,5 @@ jobs:
       # package:test for this step to succeed. Note that Flutter projects will
       # want to change this to 'flutter test'.
       - name: Run tests
-        run: cd flutter_network_layer && dart test
+        run: cd flutter_network_layer_dio && dart test
 
