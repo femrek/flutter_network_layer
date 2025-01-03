@@ -9,7 +9,7 @@ abstract final class AppNetworkInitializer {
   ///
   /// Creates a [DioNetworkInvoker] with the default log callback.
   static INetworkInvoker createNetworkInvoker() {
-    return DioNetworkInvoker(onDioLog: _onLog);
+    return DioNetworkInvoker(onLog: _onLog);
   }
 
   static void _onLog(LogLevel level, String message) {

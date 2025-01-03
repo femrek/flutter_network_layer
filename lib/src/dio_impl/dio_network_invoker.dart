@@ -7,17 +7,26 @@ import 'package:flutter_network_layer/flutter_network_layer.dart';
 final class DioNetworkInvoker implements INetworkInvoker {
   /// Create a new instance of [DioNetworkInvoker].
   ///
-  /// [onDioLog] is a callback function to trigger when a log is received from
+  /// [onLog] is a callback function to trigger when a log is received from
   /// this network manager.
   DioNetworkInvoker({
-    OnDioLog? onDioLog,
+    OnDioInvokerLog? onLog,
+    this.dioInterceptors = const [],
   }) {
-    this.onDioLog = onDioLog ??= (_, __) {};
+    this.onLog = onLog ??= (_, __) {};
   }
 
   /// The callback function to trigger when a log is received from this
   /// network manager.
-  late final OnDioLog onDioLog;
+  late final OnDioInvokerLog onLog;
+
+  /// Middleware tool provided by [Dio] to execute code before and after
+  /// the request.
+  ///
+  /// They are added to the [Dio] instance when the [init] function is called.
+  /// See also [LogInterceptor] that is a built-in interceptor to log the
+  /// request and response data or errors.
+  final List<Interceptor> dioInterceptors;
 
   /// defined as a late variable to be initialized in the [init] function.
   late final Dio _dio;
@@ -25,11 +34,8 @@ final class DioNetworkInvoker implements INetworkInvoker {
   static const String _tag = 'DioNetworkManager';
 
   @override
-  Future<void> init(
-    String baseUrl, {
-    LogInterceptor? logInterceptor,
-  }) async {
-    onDioLog(
+  Future<void> init(String baseUrl) async {
+    onLog(
       LogLevel.trace,
       'START: $_tag.init: $baseUrl',
     );
@@ -37,20 +43,19 @@ final class DioNetworkInvoker implements INetworkInvoker {
     _dio = Dio(
       BaseOptions(
         baseUrl: baseUrl,
-        validateStatus: (status) => true,
         responseType: ResponseType.plain,
       ),
     );
 
-    if (logInterceptor != null) {
-      _dio.interceptors.add(logInterceptor);
+    for (final interceptor in dioInterceptors) {
+      _dio.interceptors.add(interceptor);
     }
 
-    onDioLog(
+    onLog(
       LogLevel.init,
       '$_tag initialized with baseUrl: $baseUrl',
     );
-    onDioLog(
+    onLog(
       LogLevel.trace,
       'END  : $_tag.init: $baseUrl',
     );
@@ -59,7 +64,7 @@ final class DioNetworkInvoker implements INetworkInvoker {
   @override
   Future<ResponseResult<T>> request<T extends IResponseModel>(
       IRequestCommand<T> request) async {
-    onDioLog(
+    onLog(
       LogLevel.trace,
       'START: $_tag.request: ${request.method.value} ${request.path}',
     );
@@ -68,20 +73,20 @@ final class DioNetworkInvoker implements INetworkInvoker {
 
     result.when(
       success: (response) {
-        onDioLog(
+        onLog(
           LogLevel.successResponse,
           'Response: ${response.statusCode} ${response.data.toJson()}',
         );
       },
       error: (response) {
-        onDioLog(
+        onLog(
           LogLevel.errorResponse,
           'Response: ${response.statusCode} ${response.message}',
         );
       },
     );
 
-    onDioLog(
+    onLog(
       LogLevel.trace,
       'END  : $_tag.request: ${request.method.value} ${request.path}',
     );
@@ -105,7 +110,7 @@ final class DioNetworkInvoker implements INetworkInvoker {
       }
     }
 
-    onDioLog(
+    onLog(
       LogLevel.request,
       'Request: ${request.method.value} ${request.path} payload: $payload',
     );
@@ -121,10 +126,39 @@ final class DioNetworkInvoker implements INetworkInvoker {
           headers: request.headers,
         ),
       );
+    } on DioException catch (e, s) {
+      // if the response is null, return an internal error.
+      final response = e.response;
+      if (response == null) {
+        onLog(
+          LogLevel.internalError,
+          'No response when exception: $e$s',
+        );
+        return ErrorResponseResult.noResponse(
+          message: 'Request failed: $e',
+        );
+      }
+
+      // if the response status code is null, return an internal error.
+      final statusCode = response.statusCode;
+      if (statusCode == null) {
+        onLog(
+          LogLevel.internalError,
+          'No status code in response: $e$s',
+        );
+        return ErrorResponseResult.noResponse(
+          message: 'No status code in response: $e',
+        );
+      }
+
+      return ErrorResponseResult.withResponse(
+        message: response.data.toString(),
+        statusCode: statusCode,
+      );
     } on Exception catch (e, s) {
-      onDioLog(
+      onLog(
         LogLevel.internalError,
-        'Request failed exception: $e $s',
+        'Request failed exception: $e$s',
       );
       return ErrorResponseResult.noResponse(
         message: 'Request failed: $e',
@@ -135,7 +169,7 @@ final class DioNetworkInvoker implements INetworkInvoker {
     final statusCode = response.statusCode;
 
     if (statusCode == null) {
-      onDioLog(
+      onLog(
         LogLevel.internalError,
         'Status code of received response is null.',
       );
@@ -150,7 +184,7 @@ final class DioNetworkInvoker implements INetworkInvoker {
       );
     }
     if (responseData is! String) {
-      onDioLog(
+      onLog(
         LogLevel.internalError,
         'Invalid response type. Response data is expected to be String. '
         'Response type: ${responseData.runtimeType}',
@@ -183,7 +217,7 @@ final class DioNetworkInvoker implements INetworkInvoker {
         statusCode: statusCode,
       );
     } on Exception catch (e, s) {
-      onDioLog(
+      onLog(
         LogLevel.internalError,
         'Failed to parse response: $e $s',
       );
