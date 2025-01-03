@@ -7,7 +7,8 @@ environment:
   sdk: ^3.6.0
 
 dependencies:
-  dio: ^5.7.0
+  flutter_network_layer_core: ^0.0.1
+  flutter_network_layer_dio: ^0.0.1
 
 dev_dependencies:
   test: ^1.25.14

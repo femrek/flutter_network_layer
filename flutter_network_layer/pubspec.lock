@@ -79,7 +79,7 @@ packages:
     source: hosted
     version: "3.0.6"
   dio:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: dio
       sha256: "5598aa796bbf4699afd5c67c0f5f6e2ed542afc956884b9cd58c306966efc260"
@@ -102,6 +102,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.1"
+  flutter_network_layer_core:
+    dependency: "direct main"
+    description:
+      name: flutter_network_layer_core
+      sha256: a535b0b2e4432046a6accd5e2ee4460f95083286fead310a1bb461acdc761c5a
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
+  flutter_network_layer_dio:
+    dependency: "direct main"
+    description:
+      name: flutter_network_layer_dio
+      sha256: a637da7832b9f58ff2196c7968097a9996a96a14cd0ffeb3dbf995405b8bc475
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
   frontend_server_client:
     dependency: transitive
     description:
