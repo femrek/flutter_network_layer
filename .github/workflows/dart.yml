@@ -75,9 +75,9 @@ jobs:
 
       - name: Generate release zip
         run: |
-          FOLDER_SUFFIX=${{ steps.package_name.outputs.package_name }}
-          cd flutter_network_layer${FOLDER_SUFFIX}
-          zip -r ../${{ github.ref_name }}.zip .
+          FOLDER_NAME=flutter_network_layer${{ steps.package_name.outputs.package_name }}
+          cd ${FOLDER_NAME}
+          zip -r ../${FOLDER_NAME}.zip .
 
       - name: Find if it is prerelease by first number of tag
         id: is_prerelease
