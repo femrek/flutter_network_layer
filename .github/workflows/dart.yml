@@ -75,18 +75,22 @@ jobs:
         run: |
           FOLDER_SUFFIX=${{ steps.package_name.outputs.package_name }}
           cd flutter_network_layer${FOLDER_SUFFIX}
-          zip -r ../{{ github.ref_name }}.zip .
+          zip -r ../${{ github.ref_name }}.zip .
 
       - name: Find if it is prerelease by first number of tag
         id: is_prerelease
         run: |
           if [[ ${{ github.ref_name }} == *v0.* ]]; then
-            echo "::set-output name=is_prerelease::true"
+            echo "is_prerelease=true" >> $GITHUB_ENV
           else
-            echo "::set-output name=is_prerelease::false"
+            echo "is_prerelease=false" >> $GITHUB_ENV
           fi
 
+      - name: list files
+        run: ls -la
+
       - name: Create Release
+        id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -104,6 +108,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./
-          asset_name: {{ github.ref_name }}.zip
+          asset_path: ./${{ github.ref_name }}.zip
+          asset_name: ${{ github.ref_name }}.zip
           asset_content_type: application/zip
