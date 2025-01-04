@@ -4,14 +4,15 @@ on:
   push:
     branches: [ "main" ]
     tags:
-      - 'v*'
-      - 'dio_v*'
-      - 'core_v*'
+      - 'v*' # Release tags for the bundle package
+      - 'dio_v*' # Release tags for the dio implementation package
+      - 'core_v*' # Release tags for the core package
   pull_request:
     branches: [ "main" ]
 
 jobs:
-  build:
+  # Analyze the source code then run the tests
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -46,8 +47,9 @@ jobs:
       - name: Run tests
         run: cd flutter_network_layer_dio && dart test
 
+  # Create a GitHub release only if it is a tag push
   release:
-    needs: build
+    needs: test
     runs-on: ubuntu-latest
 
     # check if it is a tag push
