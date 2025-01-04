@@ -61,9 +61,9 @@ jobs:
         id: package_name
         run: |
           if [[ ${{ github.ref }} == refs/tags/dio_v* ]]; then
-            echo "::set-output name=package_name::dio_"
+            echo "::set-output name=package_name::_dio"
           elif [[ ${{ github.ref }} == refs/tags/core_v* ]]; then
-            echo "::set-output name=package_name::core_"
+            echo "::set-output name=package_name::_core"
           elif [[ ${{ github.ref }} == refs/tags/v* ]]; then
             echo "::set-output name=package_name::"
           else
@@ -73,8 +73,8 @@ jobs:
 
       - name: Generate release zip
         run: |
-          $FOLDER_SUFFIX = ${{ steps.package_name.outputs.package_name }}
-          cd flutter_network_layer${FOLDER_NAME}
+          FOLDER_SUFFIX=${{ steps.package_name.outputs.package_name }}
+          cd flutter_network_layer${FOLDER_SUFFIX}
           zip -r {{ github.ref_name }}.zip .
 
       - name: Find if it is prerelease by first number of tag
