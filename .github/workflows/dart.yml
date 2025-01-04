@@ -1,13 +1,12 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: Dart
 
 on:
   push:
     branches: [ "main" ]
+    tags:
+      - 'v*'
+      - 'dio_v*'
+      - 'core_v*'
   pull_request:
     branches: [ "main" ]
 
@@ -17,45 +16,95 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      # Note: This workflow uses the latest stable version of the Dart SDK.
-      # You can specify other versions if desired, see documentation here:
-      # https://github.com/dart-lang/setup-dart/blob/main/README.md
-      # - uses: dart-lang/setup-dart@v1
       - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
 
+      # Install dependencies for each package
       - name: Install dependencies for core
         run: dart pub get --no-example -C flutter_network_layer_core
-
       - name: Install dependencies for dio impl
         run: dart pub get --no-example -C flutter_network_layer_dio
-
       - name: Install dependencies for bundle
         run: dart pub get --no-example -C flutter_network_layer
 
-      # Uncomment this step to verify the use of 'dart format' on each commit.
+      # Verify that the libraries are error free
       - name: Verify formatting for core
         run: dart format --output=none --set-exit-if-changed flutter_network_layer_core/lib
-
       - name: Verify formatting for dio impl
         run: dart format --output=none --set-exit-if-changed flutter_network_layer_dio/lib
-
       - name: Verify formatting for bundle
         run: dart format --output=none --set-exit-if-changed flutter_network_layer/lib
 
-      # Consider passing '--fatal-infos' for slightly stricter analysis.
+      # Analyze the source code
       - name: Analyze project source for core
         run: dart analyze flutter_network_layer_core/lib
-
       - name: Analyze project source for dio impl
         run: dart analyze flutter_network_layer_dio/lib
-
       - name: Analyze project source for bundle
         run: dart analyze flutter_network_layer/lib
 
-      # Your project will need to have tests in test/ and a dependency on
-      # package:test for this step to succeed. Note that Flutter projects will
-      # want to change this to 'flutter test'.
+      # Run tests
       - name: Run tests
         run: cd flutter_network_layer_dio && dart test
 
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    # check if it is a tag push
+    if: startsWith(github.ref, 'refs/tags/')
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v2
+
+      - name: determine package name by tag
+        id: package_name
+        run: |
+          if [[ ${{ github.ref }} == refs/tags/dio_v* ]]; then
+            echo "::set-output name=package_name::dio_"
+          elif [[ ${{ github.ref }} == refs/tags/core_v* ]]; then
+            echo "::set-output name=package_name::core_"
+          elif [[ ${{ github.ref }} == refs/tags/v* ]]; then
+            echo "::set-output name=package_name::"
+          else
+            echo "::error::Unknown package name"
+            exit 1
+          fi
+
+      - name: Generate release zip
+        run: |
+          $FOLDER_SUFFIX = ${{ steps.package_name.outputs.package_name }}
+          cd flutter_network_layer${FOLDER_NAME}
+          zip -r {{ github.ref_name }}.zip .
+
+      - name: Find if it is prerelease by first number of tag
+        id: is_prerelease
+        run: |
+          if [[ ${{ github.ref_name }} == *v0.* ]]; then
+            echo "::set-output name=is_prerelease::true"
+          else
+            echo "::set-output name=is_prerelease::false"
+          fi
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          body: |
+            ## Changes
+            - Describe changes for this release here.
+          draft: false
+          prerelease: ${{ steps.is_prerelease.outputs.is_prerelease }}
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/main
+          asset_name: main
+          asset_content_type: application/octet-stream
