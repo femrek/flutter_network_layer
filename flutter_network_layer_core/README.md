@@ -1,92 +1,59 @@
-# flutter_network_layer
+# flutter_network_layer_core The Core Package Of The flutter_network_layer.
 
-A package to use as a network layer for Flutter projects.
+Provides the frame for following implementations:
 
-## Table of Contents
+- [flutter_network_layer_dio](https://github.com/femrek/flutter_network_layer/tree/main/flutter_network_layer_dio)
 
-- [General Information](#general-information)
-    - [Command Pattern Like Request Management](#command-pattern-like-request-management)
-    - [Implementation with Dio](#implementation-with-dio)
-- [Features](#features)
-- [Use in Your Project](#use-in-your-project)
-    - [Importing the Network Module](#importing-the-network-module)
+## Usage
 
-## General Information
+Recommended to use with above implementations. However, you can implement your own network layer.
 
-A modular architecture template for Flutter projects with a network layer. This template is designed to provide a
-network module that can be imported into any Flutter project uses an api.
-
-### Command Pattern Like Request Management
-
-This package uses an architecture that is similar to the command pattern to manage requests.
-
-Each request is a command that can be executed as a parameter of the `request` method of the `INetworkInvoker`
-interface.
-
-Request commands can be created by implementing the `IRequestCommand` interface. The `IRequestCommand` interface has
-fields that describes the request such as http request method (GET, POST, etc.), request header, payload, etc. The
-request is sent to the server by executing the `request` method of the `INetworkInvoker`.
-
-### Implementation with Dio
-
-The network layer is implemented with Dio. Another implementation can be used by implementing the `INetworkInvoker`
-interface easily.
-
-## Features
-
-- Modular and easily pluggable architecture.
-- Command-pattern-like request management.
-- Built-in support for Dio.
-- Easy integration with dependency injection frameworks like `get_it`.
-
-## Use in Your Project
-
-### Importing the Network Module
-
-The tests in the `test` directory demonstrates how to use the network layer. Also, the `example` application is a simple
-Flutter application that uses this network layer to fetch data from a server.
-
-`example` project also uses `get_it` implementation to show the efficient usage of the network layer.
-
-Until it is published as a package, the network module can be imported into a Flutter project by following these steps:
-
-- Create a folder named `module` in root of your project.
-- Clone this repository into the `module` folder.
-- Add the network module as a dependency in the `pubspec.yaml` file of the project.
-
-```yaml
-dependencies:
-  flutter_network_layer:
-    path: module/flutter_network_layer
-```
-
-- Create your own response models like that:
+- Create a `INetworkInvoker` implementation like that. This is already implemented in mentioned implementation packages.
 
 ```dart
-import 'package:flutter_network_layer/network_module.dart';
+// Network Invoker Implementation
 
-final class ResponseUser implements IResponseModel {
-  const ResponseUser({
+import 'package:flutter_network_layer_core/flutter_network_layer_core.dart';
+
+class NetworkInvoker implements INetworkInvoker {
+  @override
+  Future<void> init(String baseUrl) async {
+    // Create your network client here.
+  }
+
+  @override
+  Future<ResponseResult<T>> request<T extends IResponseModel>(
+      IRequestCommand<T> request) async {
+    // Process your request with the network client.
+  }
+}
+```
+
+- Create your own response models like that. These models are specific to api response so they need to be implemented
+  in product level.
+
+```dart
+import 'package:flutter_network_layer_core/flutter_network_layer_core.dart';
+
+class ResponseExample implements IResponseModel {
+  final String id;
+  final String name;
+  final int age;
+
+  const ResponseExample({
     required this.id,
     required this.name,
     required this.age,
   });
 
-  const ResponseUser.empty()
+  const ResponseExample.empty()
       : id = '',
         name = '',
         age = 0;
 
-  final String id;
-  final String name;
-  final int age;
-
   @override
-  ResponseUser fromJson(dynamic json) {
-    assert(json is Map<String, dynamic>, 'json is not a Map<String, dynamic>');
-    final map = json as Map<String, dynamic>;
-
-    return ResponseUser(
+  factory ResponseExample.fromJson(Map<String, dynamic> map) {
+    return ResponseExample(
       id: map['id'] as String,
       name: map['name'] as String,
       age: map['age'] as int,
@@ -104,12 +71,13 @@ final class ResponseUser implements IResponseModel {
 }
 ```
 
-- Create your own request models like that:
+- Create your own request models like that. These models are specific to api request so they need to be implemented
+  in product level.
 
 ```dart
-import 'package:flutter_network_layer/network_module.dart';
+import 'package:flutter_network_layer_core/flutter_network_layer_core.dart';
 
-final class RequestUser implements IRequestCommand<ResponseUser> {
+class RequestUser implements IRequestCommand<ResponseUser> {
   @override
   Map<String, dynamic> get data => const {};
 
@@ -126,60 +94,12 @@ final class RequestUser implements IRequestCommand<ResponseUser> {
   OnProgressCallback? onSendProgressUpdate;
 
   @override
-  String get path => '/user';
+  String get path => '/example';
 
   @override
   RequestPayloadType get payloadType => RequestPayloadType.json;
 
   @override
-  ResponseUser get sampleModel => const ResponseUser.empty();
+  ResponseExample get sampleModel => const ResponseExample.empty();
 }
-```
-
-- Use the network layer in your project.
-
-```dart
-import 'package:flutter_network_layer/network_module.dart';
-
-import 'request_user.dart';
-import 'response_user.dart';
-
-void main() async {
-  final INetworkInvoker nm = DioNetworkInvoker();
-  final IRequestCommand<ResponseUser> request = await nm.request(RequestUser());
-  request.when(
-    success: (response) {
-      print('Response: $response');
-    },
-    failure: (error) {
-      print('Error: $error');
-    },
-  );
-}
-```
-
-## License
-
-```
-MIT License
-
-Copyright (c) 2025 Faruk Emre
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 ```
