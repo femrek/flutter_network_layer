@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_network_layer_core/flutter_network_layer_core.dart';
 import 'package:flutter_network_layer_dio/flutter_network_layer_dio.dart';
 
 /// The network manager class for managing to api communication.
