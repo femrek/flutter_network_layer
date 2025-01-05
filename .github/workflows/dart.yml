@@ -76,8 +76,7 @@ jobs:
       - name: Generate release zip
         run: |
           FOLDER_NAME=flutter_network_layer${{ steps.package_name.outputs.package_name }}
-          cd ${FOLDER_NAME}
-          zip -r ../${FOLDER_NAME}.zip .
+          zip -r source_code.zip ${FOLDER_NAME}
 
       - name: Find if it is prerelease by first number of tag
         id: is_prerelease
@@ -104,12 +103,16 @@ jobs:
           draft: false
           prerelease: ${{ steps.is_prerelease.outputs.is_prerelease }}
 
+      - name: Debug package name
+        run: |
+          echo "Package name is: ${{ steps.package_name.outputs.package_name }}"
+
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ github.ref_name }}.zip
-          asset_name: ${{ github.ref_name }}.zip
+          asset_path: source_code.zip
+          asset_name: flutter_network_layer${{ env.package_name }}.zip
           asset_content_type: application/zip
