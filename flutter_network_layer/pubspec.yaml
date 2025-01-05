@@ -1,6 +1,6 @@
 name: flutter_network_layer
-description: "Network manager for Flutter applications"
-version: 0.0.1
+description: "Network manager for Flutter applications. Brings together the implementations of the flutter_network_layer_core package."
+version: 0.1.0
 homepage: https://github.com/femrek/flutter_network_layer/tree/main/flutter_network_layer
 
 environment:
