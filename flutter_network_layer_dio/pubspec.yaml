@@ -1,6 +1,6 @@
 name: flutter_network_layer_dio
 description: "Dio implementation for flutter_network_layer"
-version: 0.0.2
+version: 0.1.0
 homepage: https://github.com/femrek/flutter_network_layer/tree/main/flutter_network_layer_dio
 
 environment:
