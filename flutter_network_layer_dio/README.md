@@ -1,6 +1,8 @@
-# flutter_network_layer
+# flutter_network_layer_dio The Implementation of flutter_network_layer_core with Dio.
 
-A package to use as a network layer for Flutter projects.
+Provides the implementation of the network layer with 
+[Dio](https://pub.dev/packages/dio) package. Includes the network invoker that is defined in
+[flutter_network_layer_core.](https://github.com/femrek/flutter_network_layer/tree/main/flutter_network_layer_core)
 
 ## Table of Contents
 
@@ -9,7 +11,9 @@ A package to use as a network layer for Flutter projects.
     - [Implementation with Dio](#implementation-with-dio)
 - [Features](#features)
 - [Use in Your Project](#use-in-your-project)
-    - [Importing the Network Module](#importing-the-network-module)
+- [Listen the Logs of the Package](#listen-the-logs-of-the-package)
+- [Dio Interceptors](#dio-interceptors)
+- [License](#license)
 
 ## General Information
 
@@ -38,10 +42,9 @@ interface easily.
 - Command-pattern-like request management.
 - Built-in support for Dio.
 - Easy integration with dependency injection frameworks like `get_it`.
+- Logging trigger function to integrate with logger of the product level.
 
 ## Use in Your Project
-
-### Importing the Network Module
 
 The tests in the `test` directory demonstrates how to use the network layer. Also, the `example` application is a simple
 Flutter application that uses this network layer to fetch data from a server.
@@ -56,14 +59,15 @@ Until it is published as a package, the network module can be imported into a Fl
 
 ```yaml
 dependencies:
-  flutter_network_layer:
-    path: module/flutter_network_layer
+  flutter_network_layer: <version code> # check the version code in the pubspec.yaml file of the module.
 ```
 
-- Create your own response models like that:
+- Create your own response models like following example. Also, you can use auto generation tools like
+  `json_serializable` to generate these models. The only point is that these models should implement the
+  `IResponseModel` and providing valid json serialization methods.
 
 ```dart
-import 'package:flutter_network_layer/network_module.dart';
+import 'package:flutter_network_layer_dio/flutter_network_layer_dio.dart';
 
 final class ResponseUser implements IResponseModel {
   const ResponseUser({
@@ -104,10 +108,11 @@ final class ResponseUser implements IResponseModel {
 }
 ```
 
-- Create your own request models like that:
+- Create your own request models (commands) like following example. This class have to include information about the
+  request will be sent to the server.
 
 ```dart
-import 'package:flutter_network_layer/network_module.dart';
+import 'package:flutter_network_layer_dio/flutter_network_layer_dio.dart';
 
 final class RequestUser implements IRequestCommand<ResponseUser> {
   @override
@@ -136,10 +141,11 @@ final class RequestUser implements IRequestCommand<ResponseUser> {
 }
 ```
 
-- Use the network layer in your project.
+- Use the network layer in your project. Dependency injection is used in the example project, and it is recommended. You
+  can use the network layer without dependency injection as well.
 
 ```dart
-import 'package:flutter_network_layer/network_module.dart';
+import 'package:flutter_network_layer_dio/flutter_network_layer_dio.dart';
 
 import 'request_user.dart';
 import 'response_user.dart';
@@ -156,6 +162,42 @@ void main() async {
     },
   );
 }
+```
+
+## Listen the Logs of the Package
+
+The package provides a logging trigger function to integrate with the logger of the product level. The logging trigger
+function can be set by calling the `setLoggingTrigger` function of the `NetworkModule` class.
+
+```dart
+// pass the logging trigger function when creating the network invoker.
+final INetworkInvoker nm = DioNetworkInvoker(
+  onLog: _onLog,
+);
+
+void _onLog(LogLevel level, String message) {
+  // You can use your own logger here.
+  // For a simple example, you can print the logs to the console like that.
+  print('[$level] $message');
+  
+  if (!level.maySensitiveData) {
+    // The log message does not contain request or response data for this condition.
+  }
+}
+```
+
+## Dio Interceptors
+
+Dio interceptors can be added to the network invoker by passing them as a parameter to the constructor of the
+`DioNetworkInvoker` class. They are added to the Dio instance when the `init` method is called. Check the Dio
+documentation for more information about interceptors.
+
+```dart
+final INetworkInvoker nm = DioNetworkInvoker(
+  dioInterceptors: [
+    YourInterceptor(),
+  ],
+);
 ```
 
 ## License
