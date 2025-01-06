@@ -49,8 +49,6 @@ interface easily.
 The tests in the `test` directory demonstrates how to use the network layer. Also, the `example` application is a simple
 Flutter application that uses this network layer to fetch data from a server.
 
-`example` project also uses `get_it` implementation to show the efficient usage of the network layer.
-
 Until it is published as a package, the network module can be imported into a Flutter project by following these steps:
 
 - Create a folder named `module` in root of your project.
