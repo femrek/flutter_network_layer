@@ -15,13 +15,9 @@ dependencies:
   flutter_network_layer_dio:
     path: ../
 
-  # dependency injection
-  get_it: ^8.0.3
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
   very_good_analysis: ^7.0.0
 
 flutter:
