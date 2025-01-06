@@ -49,15 +49,11 @@ interface easily.
 The tests in the `test` directory demonstrates how to use the network layer. Also, the `example` application is a simple
 Flutter application that uses this network layer to fetch data from a server.
 
-Until it is published as a package, the network module can be imported into a Flutter project by following these steps:
-
-- Create a folder named `module` in root of your project.
-- Clone this repository into the `module` folder.
 - Add the network module as a dependency in the `pubspec.yaml` file of the project.
 
 ```yaml
 dependencies:
-  flutter_network_layer: <version code> # check the version code in the pubspec.yaml file of the module.
+  flutter_network_layer_dio: <version code> # check the version code in the pubspec.yaml file of the module.
 ```
 
 - Create your own response models like following example. Also, you can use auto generation tools like
