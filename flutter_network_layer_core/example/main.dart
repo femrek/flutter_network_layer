@@ -1,70 +1,21 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_network_layer_core/flutter_network_layer_core.dart';
 
 void main() async {
-  runApp(const App());
+  final networkManager = NetworkManager();
+  networkManager.init('https://example.com');
+
+  final response = await networkManager.request(RequestExample());
+  response.when(
+    success: (response) {
+      print(response.data.message);
+    },
+    error: (response) {
+      print('Error: ${response.message}');
+    },
+  );
 }
 
-/// The app widget.
-class App extends StatelessWidget {
-  /// Create an instance of [App].
-  const App({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'App',
-      home: ScreenHome(),
-    );
-  }
-}
-
-class ScreenHome extends StatefulWidget {
-  const ScreenHome({super.key});
-
-  @override
-  State<ScreenHome> createState() => _ScreenHomeState();
-}
-
-class _ScreenHomeState extends State<ScreenHome> {
-  @override
-  void initState() {
-    super.initState();
-    _loadData();
-  }
-
-  Future<void> _loadData() async {
-    final networkManager = NetworkManager();
-    networkManager.init('https://example.com');
-
-    final response = await networkManager.request(RequestExample());
-    response.when(
-      success: (response) {
-        setState(() {
-          _data = response.data.message;
-        });
-      },
-      error: (response) {
-        print('Error: ${response.message}');
-      },
-    );
-  }
-
-  String _data = '';
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'),
-      ),
-      body: Center(
-        child: Text(_data),
-      ),
-    );
-  }
-}
-
+/// A dummy network manager that returns a dummy response.
 class NetworkManager implements INetworkInvoker {
   @override
   Future<void> init(String baseUrl) async {}
@@ -127,7 +78,8 @@ class ResponseExample implements IResponseModel {
   final String message;
 
   @override
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         'message': message,
       };
 
