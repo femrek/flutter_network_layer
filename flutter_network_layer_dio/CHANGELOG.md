@@ -1,3 +1,8 @@
+## 0.1.2
+
+* Readme updated.
+* Package Description updated.
+
 ## 0.1.1
 
 * Core module dependency version updated to v0.1.0
