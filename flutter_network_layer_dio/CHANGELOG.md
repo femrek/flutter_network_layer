@@ -1,3 +1,7 @@
+## 0.1.3
+
+* Example project is updated.
+
 ## 0.1.2
 
 * Readme updated.
