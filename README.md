@@ -2,6 +2,12 @@
 
 A package to use as a network layer for Flutter projects.
 
+To use in your flutter/dart project:
+
+- [flutter_network_layer_dio](https://pub.dev/packages/flutter_network_layer_dio)
+
+Or, implement your own with [flutter_network_layer_core](https://pub.dev/packages/flutter_network_layer_core)
+
 ## Table of Contents
 
 - [General Information](#general-information)
@@ -9,7 +15,6 @@ A package to use as a network layer for Flutter projects.
     - [Implementation with Dio](#implementation-with-dio)
 - [Features](#features)
 - [Use in Your Project](#use-in-your-project)
-    - [Importing the Network Module](#importing-the-network-module)
 
 ## General Information
 
@@ -29,124 +34,20 @@ request is sent to the server by executing the `request` method of the `INetwork
 
 ### Implementation with Dio
 
-The network layer is implemented with Dio. Another implementation can be used by implementing the `INetworkInvoker`
-interface easily.
+[flutter_network_layer_dio](https://pub.dev/packages/flutter_network_layer_dio) is the implementation of this
+package with dio. For now, there is only this implementation.
 
 ## Features
 
 - Modular and easily pluggable architecture.
 - Command-pattern-like request management.
-- Built-in support for Dio.
 - Easy integration with dependency injection frameworks like `get_it`.
 
 ## Use in Your Project
 
-### Importing the Network Module
-
-- Add the network module as a dependency in the `pubspec.yaml` file of the project.
-
-```yaml
-dependencies:
-  flutter_network_layer: <version> # check the version code on pub.dev.
-```
-
-- Create your own response models like that:
-
-```dart
-import 'package:flutter_network_layer/network_module.dart';
-
-final class ResponseUser implements IResponseModel {
-  const ResponseUser({
-    required this.id,
-    required this.name,
-    required this.age,
-  });
-
-  const ResponseUser.empty()
-      : id = '',
-        name = '',
-        age = 0;
-
-  final String id;
-  final String name;
-  final int age;
-
-  @override
-  ResponseUser fromJson(dynamic json) {
-    assert(json is Map<String, dynamic>, 'json is not a Map<String, dynamic>');
-    final map = json as Map<String, dynamic>;
-
-    return ResponseUser(
-      id: map['id'] as String,
-      name: map['name'] as String,
-      age: map['age'] as int,
-    );
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'age': age,
-    };
-  }
-}
-```
-
-- Create your own request models like that:
-
-```dart
-import 'package:flutter_network_layer/network_module.dart';
-
-final class RequestUser implements IRequestCommand<ResponseUser> {
-  @override
-  Map<String, dynamic> get data => const {};
-
-  @override
-  Map<String, dynamic> get headers => const {};
-
-  @override
-  HttpRequestMethod get method => HttpRequestMethod.get;
-
-  @override
-  OnProgressCallback? onReceiveProgressUpdate;
-
-  @override
-  OnProgressCallback? onSendProgressUpdate;
-
-  @override
-  String get path => '/user';
-
-  @override
-  RequestPayloadType get payloadType => RequestPayloadType.json;
-
-  @override
-  ResponseUser get sampleModel => const ResponseUser.empty();
-}
-```
-
-- Use the network layer in your project.
-
-```dart
-import 'package:flutter_network_layer/network_module.dart';
-
-import 'request_user.dart';
-import 'response_user.dart';
-
-void main() async {
-  final INetworkInvoker nm = DioNetworkInvoker();
-  final IRequestCommand<ResponseUser> request = await nm.request(RequestUser());
-  request.when(
-    success: (response) {
-      print('Response: $response');
-    },
-    failure: (error) {
-      print('Error: $error');
-    },
-  );
-}
-```
+Check out the 
+[Dio implementation](https://github.com/femrek/flutter_network_layer/tree/main/flutter_network_layer_dio#use-in-your-project)
+to see how to use it on your project.
 
 ## License
 
