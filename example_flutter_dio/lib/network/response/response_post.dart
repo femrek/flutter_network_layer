@@ -3,7 +3,7 @@ import 'package:flutter_network_layer_dio/flutter_network_layer_dio.dart';
 
 /// The response model for the post response.
 @immutable
-final class ResponsePost implements IResponseModel {
+final class ResponsePost extends JsonResponseModel {
   /// Create an instance of [ResponsePost].
   const ResponsePost({
     this.userId,
@@ -28,7 +28,7 @@ final class ResponsePost implements IResponseModel {
   final String? body;
 
   @override
-  IResponseModel fromJson(dynamic json) {
+  ResponsePost fromJson(dynamic json) {
     if (json is! Map<String, dynamic>) {
       throw Exception('Invalid response type: ${json.runtimeType}');
     }

@@ -10,7 +10,7 @@ mixin _MixinHome on State<ScreenHome> {
   }
 
   Future<void> _getTodo1() async {
-    final response = await _networkInvoker.request(const RequestGetTodo(id: 1));
+    final response = await _networkInvoker.request(RequestGetTodo(id: 1));
     response.when(
       success: (response) {
         setState(() {
@@ -26,7 +26,7 @@ mixin _MixinHome on State<ScreenHome> {
   }
 
   Future<void> _getTodos() async {
-    final response = await _networkInvoker.request(const RequestGetTodos());
+    final response = await _networkInvoker.request(RequestGetTodos());
     response.when(
       success: (response) {
         setState(() {
@@ -42,7 +42,7 @@ mixin _MixinHome on State<ScreenHome> {
   }
 
   Future<void> _getPost1() async {
-    final response = await _networkInvoker.request(const RequestGetPost(id: 1));
+    final response = await _networkInvoker.request(RequestGetPost(id: 1));
     response.when(
       success: (response) {
         setState(() {
@@ -58,7 +58,7 @@ mixin _MixinHome on State<ScreenHome> {
   }
 
   Future<void> _postAPost() async {
-    final response = await _networkInvoker.request(const RequestPostPost(
+    final response = await _networkInvoker.request(RequestPostPost(
       userId: 1,
       title: 'foo',
       body: 'bar',

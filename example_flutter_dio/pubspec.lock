@@ -74,17 +74,17 @@ packages:
     dependency: transitive
     description:
       name: flutter_network_layer_core
-      sha256: "769c5589718c48b9c2265a5adb7ab618326bc595e2c5970b33142b729e8c59bc"
+      sha256: "43ed451c369af93fdb2be45c771dda20dca3dfc53e74d536cb5bf1e4cb55ec2e"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.0"
+    version: "0.2.0"
   flutter_network_layer_dio:
     dependency: "direct main"
     description:
       path: "../flutter_network_layer_dio"
       relative: true
     source: path
-    version: "0.1.2"
+    version: "0.2.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
