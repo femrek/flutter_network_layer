@@ -24,7 +24,7 @@ class NetworkManager implements INetworkInvoker {
 
   @override
   Future<ResponseResult<T>> request<T extends ResponseModel>(
-      IRequestCommand<T> request) async {
+      RequestCommand<T> request) async {
     final dummyResponseJson = <String, dynamic>{'message': 'Hello, World!'};
 
     final sampleModel = request.sampleModel;
@@ -43,7 +43,7 @@ class NetworkManager implements INetworkInvoker {
   }
 }
 
-class RequestExample implements IRequestCommand<ResponseExample> {
+class RequestExample implements RequestCommand<ResponseExample> {
   @override
   Map<String, dynamic> get data => const {};
 

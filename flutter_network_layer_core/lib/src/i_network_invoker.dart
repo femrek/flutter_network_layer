@@ -8,5 +8,5 @@ abstract interface class INetworkInvoker {
 
   /// Performs a request and returns the response.
   Future<ResponseResult<T>> request<T extends ResponseModel>(
-      IRequestCommand<T> request);
+      RequestCommand<T> request);
 }

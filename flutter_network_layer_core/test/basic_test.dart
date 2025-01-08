@@ -54,7 +54,7 @@ class _SampleNetworkInvoker implements INetworkInvoker {
 
   @override
   Future<ResponseResult<T>> request<T extends ResponseModel>(
-      IRequestCommand<T> request) async {
+      RequestCommand<T> request) async {
     final response = await http.get(Uri.parse('$baseUrl${request.path}'));
     if (response.statusCode != 200) {
       return ErrorResponseResult.withResponse(
