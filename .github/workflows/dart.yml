@@ -130,9 +130,6 @@ jobs:
       - uses: actions/checkout@v3
       - uses: dart-lang/setup-dart@v1
 
-      - name: Install dependencies
-        run: dart pub get
-
       - name: determine package name by tag
         id: package_name
         run: |
@@ -146,6 +143,11 @@ jobs:
             echo "::error::Unknown package name"
             exit 1
           fi
+
+      - name: Install dependencies
+        run: |
+          cd flutter_network_layer${{ steps.package_name.outputs.package_name }}
+          dart pub get
 
       - name: Publish
         run: |
