@@ -4,7 +4,7 @@ import 'package:flutter_network_layer/flutter_network_layer.dart';
 
 /// The response model for the todos response.
 @immutable
-final class ResponseTodoList implements IResponseModel {
+final class ResponseTodoList extends JsonResponseModel {
   /// Create an instance of [ResponseTodoList].
   const ResponseTodoList({
     required this.todos,

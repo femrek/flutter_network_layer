@@ -3,7 +3,7 @@ import 'package:flutter_network_layer/flutter_network_layer.dart';
 
 /// The response model for todos.
 @immutable
-final class ResponseTodo implements IResponseModel {
+final class ResponseTodo extends JsonResponseModel {
   /// Create an instance of [ResponseTodo].
   const ResponseTodo({
     this.userId,
@@ -47,7 +47,7 @@ final class ResponseTodo implements IResponseModel {
   }
 
   @override
-  IResponseModel fromJson(dynamic json) {
+  ResponseTodo fromJson(dynamic json) {
     return ResponseTodo.fromJson(json as Map<String, dynamic>);
   }
 

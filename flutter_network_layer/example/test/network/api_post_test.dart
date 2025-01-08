@@ -17,7 +17,7 @@ void main() async {
       const title = 'foo';
       const body = 'bar';
 
-      final response = await nm.request(const RequestPostPost(
+      final response = await nm.request(RequestPostPost(
         userId: userId,
         title: title,
         body: body,

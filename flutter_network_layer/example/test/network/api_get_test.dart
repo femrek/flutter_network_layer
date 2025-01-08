@@ -16,7 +16,7 @@ void main() async {
   group('GET requests to todo api', () {
     test('GET a todo', () async {
       const todoId = 1;
-      final response = await nm.request(const RequestGetTodo(id: todoId));
+      final response = await nm.request(RequestGetTodo(id: todoId));
       expect(response, isNotNull);
 
       response.when(
@@ -30,7 +30,7 @@ void main() async {
     });
 
     test('GET all todos', () async {
-      final response = await nm.request(const RequestGetTodos());
+      final response = await nm.request(RequestGetTodos());
 
       response.when(
         success: (response) {
@@ -50,7 +50,7 @@ void main() async {
   group('GET request to post api', () {
     test('GET a post', () async {
       const postId = 1;
-      final response = await nm.request(const RequestGetPost(id: postId));
+      final response = await nm.request(RequestGetPost(id: postId));
       expect(response, isNotNull);
 
       response.when(
@@ -67,7 +67,7 @@ void main() async {
   group('Not found error', () {
     test('GET a todo that does not exist', () async {
       const todoId = 99999;
-      final response = await nm.request(const RequestGetTodo(id: todoId));
+      final response = await nm.request(RequestGetTodo(id: todoId));
       expect(response, isNotNull, reason: 'Expected a response');
 
       response.when(
