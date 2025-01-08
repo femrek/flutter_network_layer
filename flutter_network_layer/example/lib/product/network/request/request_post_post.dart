@@ -2,9 +2,9 @@ import 'package:example/product/network/response/response_post.dart';
 import 'package:flutter_network_layer/flutter_network_layer.dart';
 
 /// The request command for posting a post.
-final class RequestPostPost implements IRequestCommand<ResponsePost> {
+final class RequestPostPost extends RequestCommand<ResponsePost> {
   /// Create an instance of [RequestPostPost].
-  const RequestPostPost({
+  RequestPostPost({
     required this.userId,
     required this.title,
     required this.body,
@@ -27,22 +27,10 @@ final class RequestPostPost implements IRequestCommand<ResponsePost> {
       };
 
   @override
-  Map<String, dynamic> get headers => const {};
-
-  @override
   HttpRequestMethod get method => HttpRequestMethod.post;
 
   @override
-  OnProgressCallback? get onReceiveProgressUpdate => null;
-
-  @override
-  OnProgressCallback? get onSendProgressUpdate => null;
-
-  @override
   String get path => '/posts';
-
-  @override
-  RequestPayloadType get payloadType => RequestPayloadType.json;
 
   @override
   ResponsePost get sampleModel => const ResponsePost.empty();
