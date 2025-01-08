@@ -1,8 +1,10 @@
+// ignore_for_file: avoid_print just an example
+
 import 'package:flutter_network_layer_core/flutter_network_layer_core.dart';
 
 void main() async {
   final networkManager = NetworkManager();
-  networkManager.init('https://example.com');
+  await networkManager.init('https://example.com');
 
   final response = await networkManager.request(RequestExample());
   response.when(
@@ -21,18 +23,27 @@ class NetworkManager implements INetworkInvoker {
   Future<void> init(String baseUrl) async {}
 
   @override
-  Future<ResponseResult<T>> request<T extends IResponseModel>(
-      IRequestCommand<T> request) async {
+  Future<ResponseResult<T>> request<T extends ResponseModel>(
+      RequestCommand<T> request) async {
     final dummyResponseJson = <String, dynamic>{'message': 'Hello, World!'};
-    final dummyResponse = request.sampleModel.fromJson(dummyResponseJson) as T;
-    return SuccessResponseResult(
-      statusCode: 200,
-      data: dummyResponse,
-    );
+
+    final sampleModel = request.sampleModel;
+    if (sampleModel is JsonResponseModel) {
+      final dummyResponse = sampleModel.fromJson(dummyResponseJson) as T;
+
+      return SuccessResponseResult(
+        statusCode: 200,
+        data: dummyResponse,
+      );
+    } else {
+      return ErrorResponseResult.noResponse(
+        message: 'The sample model is not a JSON response model.',
+      );
+    }
   }
 }
 
-class RequestExample implements IRequestCommand<ResponseExample> {
+class RequestExample implements RequestCommand<ResponseExample> {
   @override
   Map<String, dynamic> get data => const {};
 
@@ -70,7 +81,7 @@ class RequestExample implements IRequestCommand<ResponseExample> {
   }
 }
 
-class ResponseExample implements IResponseModel {
+class ResponseExample extends JsonResponseModel {
   const ResponseExample({required this.message});
 
   const ResponseExample.empty() : message = '';
@@ -78,18 +89,21 @@ class ResponseExample implements IResponseModel {
   final String message;
 
   @override
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'message': message,
       };
 
   @override
-  IResponseModel fromJson(dynamic json) {
+  ResponseExample fromJson(dynamic json) {
+    if (json is! Map<String, dynamic>) {
+      throw ArgumentError.value(json, 'json', 'The value is not a map.');
+    }
+
     return ResponseExample(message: json['message'] as String);
   }
 
   @override
   String toString() {
-    return 'ResponseExample instance';
+    return 'ResponseExample{message: $message}';
   }
 }

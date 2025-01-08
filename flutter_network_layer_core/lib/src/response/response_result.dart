@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter_network_layer_core/flutter_network_layer_core.dart';
 
 /// The standard response result of a request.
-sealed class ResponseResult<T extends IResponseModel> {
+sealed class ResponseResult<T extends ResponseModel> {
   /// The payload of the response.
   int? get statusCode;
 
@@ -55,11 +55,11 @@ sealed class ResponseResult<T extends IResponseModel> {
 }
 
 /// The standard response result of a request.
-final class SuccessResponseResult<T extends IResponseModel>
+final class SuccessResponseResult<T extends ResponseModel>
     extends ResponseResult<T> {
   /// Creates a success response result.
   ///
-  /// [data] is the payload of the response. It must be an [IResponseModel] and
+  /// [data] is the payload of the response. It must be an [ResponseModel] and
   /// not null. An empty response model can be used if there is no data.
   /// [statusCode] is the status code of the response. Mostly, it is 200 for
   /// success responses.
@@ -79,7 +79,7 @@ final class SuccessResponseResult<T extends IResponseModel>
 }
 
 /// The error response result of a request.
-final class ErrorResponseResult<T extends IResponseModel>
+final class ErrorResponseResult<T extends ResponseModel>
     extends ResponseResult<T> {
   /// Creates an error response result, if a response is received from the
   /// server.

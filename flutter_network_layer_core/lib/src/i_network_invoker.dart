@@ -7,6 +7,6 @@ abstract interface class INetworkInvoker {
   Future<void> init(String baseUrl);
 
   /// Performs a request and returns the response.
-  Future<ResponseResult<T>> request<T extends IResponseModel>(
-      IRequestCommand<T> request);
+  Future<ResponseResult<T>> request<T extends ResponseModel>(
+      RequestCommand<T> request);
 }
