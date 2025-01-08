@@ -22,8 +22,7 @@ class NetworkInvoker implements INetworkInvoker {
   }
 
   @override
-  Future<ResponseResult<T>> request<T extends IResponseModel>(
-      IRequestCommand<T> request) async {
+  Future<ResponseResult<T>> request<T extends ResponseModel>(RequestCommand<T> request) async {
     // Process your request with the network client.
   }
 }
@@ -35,7 +34,7 @@ class NetworkInvoker implements INetworkInvoker {
 ```dart
 import 'package:flutter_network_layer_core/flutter_network_layer_core.dart';
 
-class ResponseExample implements IResponseModel {
+class ResponseExample extends JsonResponseModel {
   final String id;
   final String name;
   final int age;
@@ -52,7 +51,11 @@ class ResponseExample implements IResponseModel {
         age = 0;
 
   @override
-  factory ResponseExample.fromJson(Map<String, dynamic> map) {
+  factory ResponseExample.fromJson(dynamic json) {
+    if (json is! Map<String, dynamic>) {
+      throw Exception('Invalid json type');
+    }
+
     return ResponseExample(
       id: map['id'] as String,
       name: map['name'] as String,
@@ -77,7 +80,7 @@ class ResponseExample implements IResponseModel {
 ```dart
 import 'package:flutter_network_layer_core/flutter_network_layer_core.dart';
 
-class RequestUser implements IRequestCommand<ResponseUser> {
+class RequestUser implements RequestCommand<ResponseUser> {
   @override
   Map<String, dynamic> get data => const {};
 
@@ -102,4 +105,20 @@ class RequestUser implements IRequestCommand<ResponseUser> {
   @override
   ResponseExample get sampleModel => const ResponseExample.empty();
 }
+```
+
+Or, the `RequestCommand` can be extended. Default values of the fields of the `RequestCommand` are already implemented
+in this method. But, you can override them if you need.
+
+```dart
+import 'package:flutter_network_layer_core/flutter_network_layer_core.dart';
+
+class RequestUser extends RequestCommand<ResponseUser> {
+  @override
+  String get path => '/example';
+
+  @override
+  ResponseExample get sampleModel => const ResponseExample.empty();
+}
+
 ```
