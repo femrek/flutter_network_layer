@@ -4,9 +4,11 @@ A package to use as a network layer for Flutter projects.
 
 To use in your flutter/dart project:
 
-- [flutter_network_layer_dio](https://pub.dev/packages/flutter_network_layer_dio)
+- [flutter_network_layer_dio](https://github.com/femrek/flutter_network_layer/tree/main/flutter_network_layer_dio)
+([pub.dev](https://pub.dev/packages/flutter_network_layer_dio))
 
-Or, implement your own with [flutter_network_layer_core](https://pub.dev/packages/flutter_network_layer_core)
+Or, implement your own with [flutter_network_layer_core](https://github.com/femrek/flutter_network_layer/tree/main/flutter_network_layer_core)
+([pub.dev](https://pub.dev/packages/flutter_network_layer_core))
 
 ## Table of Contents
 
