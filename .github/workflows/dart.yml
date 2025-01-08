@@ -147,7 +147,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd flutter_network_layer${{ env.package_name }}
-          dart pub get
+          dart pub get --no-example
 
       - name: Publish
         run: |
