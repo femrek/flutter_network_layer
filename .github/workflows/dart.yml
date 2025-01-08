@@ -146,10 +146,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd flutter_network_layer${{ steps.package_name.outputs.package_name }}
+          cd flutter_network_layer${{ env.package_name }}
           dart pub get
 
       - name: Publish
         run: |
-          cd flutter_network_layer${{ steps.package_name.outputs.package_name }}   
+          cd flutter_network_layer${{ env.package_name }}   
           dart pub publish --force
