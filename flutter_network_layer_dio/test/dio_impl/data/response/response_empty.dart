@@ -1,10 +1,10 @@
 import 'package:flutter_network_layer_core/flutter_network_layer_core.dart';
 
-class ResponseEmpty implements IResponseModel {
+class ResponseEmpty extends JsonResponseModel {
   const ResponseEmpty();
 
   @override
-  IResponseModel fromJson(dynamic json) => const ResponseEmpty();
+  ResponseEmpty fromJson(dynamic json) => const ResponseEmpty();
 
   @override
   List<void> toJson() => const [];

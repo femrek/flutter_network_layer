@@ -62,8 +62,8 @@ final class DioNetworkInvoker implements INetworkInvoker {
   }
 
   @override
-  Future<ResponseResult<T>> request<T extends IResponseModel>(
-      IRequestCommand<T> request) async {
+  Future<ResponseResult<T>> request<T extends ResponseModel>(
+      RequestCommand<T> request) async {
     onLog(
       LogLevel.trace,
       'START: $_tag.request: ${request.method.value} ${request.path}',
@@ -73,9 +73,19 @@ final class DioNetworkInvoker implements INetworkInvoker {
 
     result.when(
       success: (response) {
-        onLog(
-          LogLevel.successResponse,
-          'Response: ${response.statusCode} ${response.data.toJson()}',
+        response.data.when(
+          json: (json) {
+            onLog(
+              LogLevel.successResponse,
+              'Response: ${response.statusCode} $json',
+            );
+          },
+          custom: (custom) {
+            onLog(
+              LogLevel.successResponse,
+              'Response: ${response.statusCode} ${custom.toPlainString()}',
+            );
+          },
         );
       },
       error: (response) {
@@ -94,8 +104,8 @@ final class DioNetworkInvoker implements INetworkInvoker {
     return result;
   }
 
-  Future<ResponseResult<T>> _request<T extends IResponseModel>(
-      IRequestCommand<T> request) async {
+  Future<ResponseResult<T>> _request<T extends ResponseModel>(
+      RequestCommand<T> request) async {
     late final Response<dynamic> response;
 
     final Object? payload;
@@ -115,6 +125,7 @@ final class DioNetworkInvoker implements INetworkInvoker {
       'Request: ${request.method.value} ${request.path} payload: $payload',
     );
 
+    // perform request
     try {
       response = await _dio.request<dynamic>(
         request.path,
@@ -168,6 +179,7 @@ final class DioNetworkInvoker implements INetworkInvoker {
     final responseData = response.data;
     final statusCode = response.statusCode;
 
+    // return error if the response has error
     if (statusCode == null) {
       onLog(
         LogLevel.internalError,
@@ -206,9 +218,26 @@ final class DioNetworkInvoker implements INetworkInvoker {
       );
     }
 
-    final json = jsonDecode(responseData);
-    final dataDynamic = request.sampleModel.fromJson(json);
+    // parse response data
+    late final dynamic dataDynamic;
+    final sampleModel = request.sampleModel;
+    if (sampleModel is JsonResponseModel) {
+      final json = jsonDecode(responseData);
+      dataDynamic = sampleModel.fromJson(json);
+    } else if (sampleModel is CustomResponseModel) {
+      dataDynamic = sampleModel.fromString(responseData);
+    } else {
+      onLog(
+        LogLevel.internalError,
+        'Invalid response model type: ${sampleModel.runtimeType}',
+      );
+      return ErrorResponseResult.withResponse(
+        message: 'Invalid response model type: ${sampleModel.runtimeType}',
+        statusCode: statusCode,
+      );
+    }
 
+    // return success response
     late final T data;
     try {
       data = dataDynamic as T;

@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print just an example
+
 import 'package:flutter_network_layer_dio/flutter_network_layer_dio.dart';
 
 void main() async {
@@ -8,7 +10,7 @@ void main() async {
   final response = await AppNetworkManager.networkInvoker.request(request);
   response.when(
     success: (response) {
-      print('DATA: ${response.data.toString()}');
+      print('DATA: ${response.data}');
     },
     error: (response) {
       print('ERROR: ${response.message}');
@@ -18,14 +20,14 @@ void main() async {
 
 abstract final class AppNetworkManager {
   static final INetworkInvoker networkInvoker =
-  DioNetworkInvoker(onLog: _onLog);
+      DioNetworkInvoker(onLog: _onLog);
 
   static void _onLog(LogLevel level, String message) {
     print('[${level.name}] $message');
   }
 }
 
-final class ResponseUser implements IResponseModel {
+final class ResponseUser extends JsonResponseModel {
   const ResponseUser({
     required this.id,
     required this.name,
@@ -61,7 +63,7 @@ final class ResponseUser implements IResponseModel {
   String toString() => toJson().toString();
 }
 
-final class RequestUser implements IRequestCommand<ResponseUser> {
+final class RequestUser extends RequestCommand<ResponseUser> {
   RequestUser({
     required this.id,
   });
@@ -69,25 +71,7 @@ final class RequestUser implements IRequestCommand<ResponseUser> {
   final int id;
 
   @override
-  Map<String, dynamic> get data => const {};
-
-  @override
-  Map<String, dynamic> get headers => const {};
-
-  @override
-  HttpRequestMethod get method => HttpRequestMethod.get;
-
-  @override
-  OnProgressCallback? onReceiveProgressUpdate;
-
-  @override
-  OnProgressCallback? onSendProgressUpdate;
-
-  @override
   String get path => '/users/$id';
-
-  @override
-  RequestPayloadType get payloadType => RequestPayloadType.json;
 
   @override
   ResponseUser get sampleModel => const ResponseUser.empty();

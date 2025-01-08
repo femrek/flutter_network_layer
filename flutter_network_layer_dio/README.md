@@ -1,6 +1,6 @@
 # flutter_network_layer_dio The Implementation of flutter_network_layer_core with Dio.
 
-Provides the implementation of the network layer with 
+Provides the implementation of the network layer with
 [Dio](https://pub.dev/packages/dio) package. Includes the network invoker that is defined in
 [flutter_network_layer_core.](https://github.com/femrek/flutter_network_layer/tree/main/flutter_network_layer_core)
 
@@ -27,9 +27,9 @@ This package uses an architecture that is similar to the command pattern to mana
 Each request is a command that can be executed as a parameter of the `request` method of the `INetworkInvoker`
 interface.
 
-Request commands can be created by implementing the `IRequestCommand` interface. The `IRequestCommand` interface has
-fields that describes the request such as http request method (GET, POST, etc.), request header, payload, etc. The
-request is sent to the server by executing the `request` method of the `INetworkInvoker`.
+Request commands can be created by implementing the `RequestCommand` class. The `RequestCommand` class has fields that
+describes the request such as http request method (GET, POST, etc.), request header, payload, etc. The request is sent
+to the server by executing the `request` method of the `INetworkInvoker`.
 
 ### Implementation with Dio
 
@@ -58,12 +58,12 @@ dependencies:
 
 - Create your own response models like following example. Also, you can use auto generation tools like
   `json_serializable` to generate these models. The only point is that these models should implement the
-  `IResponseModel` and providing valid json serialization methods.
+  `JsonResponseModel` or `CustomResponseModel` and providing valid serialization methods.
 
 ```dart
 import 'package:flutter_network_layer_dio/flutter_network_layer_dio.dart';
 
-final class ResponseUser implements IResponseModel {
+final class ResponseUser extends JsonResponseModel {
   const ResponseUser({
     required this.id,
     required this.name,
@@ -108,7 +108,7 @@ final class ResponseUser implements IResponseModel {
 ```dart
 import 'package:flutter_network_layer_dio/flutter_network_layer_dio.dart';
 
-final class RequestUser implements IRequestCommand<ResponseUser> {
+final class RequestUser extends RequestCommand<ResponseUser> {
   @override
   Map<String, dynamic> get data => const {};
 
@@ -146,7 +146,7 @@ import 'response_user.dart';
 
 void main() async {
   final INetworkInvoker nm = DioNetworkInvoker();
-  final IRequestCommand<ResponseUser> request = await nm.request(RequestUser());
+  final RequestCommand<ResponseUser> request = await nm.request(RequestUser());
   request.when(
     success: (response) {
       print('Response: $response');
@@ -173,7 +173,7 @@ void _onLog(LogLevel level, String message) {
   // You can use your own logger here.
   // For a simple example, you can print the logs to the console like that.
   print('[$level] $message');
-  
+
   if (!level.maySensitiveData) {
     // The log message does not contain request or response data for this condition.
   }
@@ -187,6 +187,7 @@ Dio interceptors can be added to the network invoker by passing them as a parame
 documentation for more information about interceptors.
 
 ```dart
+
 final INetworkInvoker nm = DioNetworkInvoker(
   dioInterceptors: [
     YourInterceptor(),

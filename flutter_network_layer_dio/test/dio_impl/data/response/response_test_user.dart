@@ -1,6 +1,6 @@
 import 'package:flutter_network_layer_core/flutter_network_layer_core.dart';
 
-class ResponseTestUser implements IResponseModel {
+class ResponseTestUser extends JsonResponseModel {
   const ResponseTestUser({
     required this.id,
     required this.name,
