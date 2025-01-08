@@ -4,8 +4,8 @@ import 'package:flutter_network_layer_core/flutter_network_layer_core.dart';
 import 'package:http/http.dart' as http;
 import 'package:test/test.dart';
 
-import 'test_request_samples.dart';
-import 'test_server.dart';
+import 'utils/test_request_samples.dart';
+import 'utils/test_server.dart';
 
 void main() async {
   group('basic tests', () {
@@ -53,7 +53,7 @@ class _SampleNetworkInvoker implements INetworkInvoker {
   }
 
   @override
-  Future<ResponseResult<T>> request<T extends IResponseModel>(
+  Future<ResponseResult<T>> request<T extends ResponseModel>(
       IRequestCommand<T> request) async {
     final response = await http.get(Uri.parse('$baseUrl${request.path}'));
     if (response.statusCode != 200) {
@@ -64,8 +64,20 @@ class _SampleNetworkInvoker implements INetworkInvoker {
     }
 
     final body = response.body;
-    final json = jsonDecode(body);
-    final model = request.sampleModel.fromJson(json) as T;
-    return SuccessResponseResult(data: model, statusCode: 200);
+
+    final sampleModel = request.sampleModel;
+    if (sampleModel is CustomResponseModel) {
+      final model = sampleModel.fromString(body) as T;
+      return SuccessResponseResult(data: model, statusCode: 200);
+    } else if (sampleModel is JsonResponseModel) {
+      final json = jsonDecode(body);
+      final model = sampleModel.fromJson(json) as T;
+      return SuccessResponseResult(data: model, statusCode: 200);
+    } else {
+      return ErrorResponseResult.withResponse(
+        message: 'Error: Invalid response model',
+        statusCode: response.statusCode,
+      );
+    }
   }
 }

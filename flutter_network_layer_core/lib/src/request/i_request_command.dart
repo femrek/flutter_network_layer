@@ -9,7 +9,7 @@ typedef OnProgressCallback = void Function(int done, int total);
 /// The interface provides the necessary information about the request such as
 /// the path, method, payload type, payload data, headers, progress callbacks,
 /// etc.
-abstract interface class IRequestCommand<T extends IResponseModel> {
+abstract interface class IRequestCommand<T extends ResponseModel> {
   /// The path of the request.
   String get path;
 
