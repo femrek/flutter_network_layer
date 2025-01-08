@@ -122,6 +122,32 @@ jobs:
   publish:
     needs: release
     if: startsWith(github.ref, 'refs/tags/')
-    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
-    with:
-      working-directory: flutter_network_layer${{ env.package_name }}
+    permissions:
+      id-token: write
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dart-lang/setup-dart@v1
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: determine package name by tag
+        id: package_name
+        run: |
+          if [[ ${{ github.ref }} == refs/tags/dio_v* ]]; then
+            echo "package_name=_dio" >> $GITHUB_ENV
+          elif [[ ${{ github.ref }} == refs/tags/core_v* ]]; then
+            echo "package_name=_core" >> $GITHUB_ENV
+          elif [[ ${{ github.ref }} == refs/tags/v* ]]; then
+            echo "package_name=" >> $GITHUB_ENV
+          else
+            echo "::error::Unknown package name"
+            exit 1
+          fi
+
+      - name: Publish
+        run: |
+          cd flutter_network_layer${{ steps.package_name.outputs.package_name }}   
+          dart pub publish --force
