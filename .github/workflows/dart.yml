@@ -4,9 +4,9 @@ on:
   push:
     branches: [ "main" ]
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+*' # Release tags for the bundle package
-      - 'dio_v[0-9]+.[0-9]+.[0-9]+*' # Release tags for the dio implementation package
-      - 'core_v[0-9]+.[0-9]+.[0-9]+*' # Release tags for the core package
+      - 'v*' # Release tags for the bundle package
+      - 'dio_v*' # Release tags for the dio implementation package
+      - 'core_v*' # Release tags for the core package
   pull_request:
     branches: [ "main" ]
 
