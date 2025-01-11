@@ -20,6 +20,9 @@ Provides the implementation of the network layer with
 A modular architecture template for Flutter projects with a network layer. This template is designed to provide a
 network module that can be imported into any Flutter project uses an api.
 
+<img width="1266" alt="Screenshot 2025-01-11 at 02 58 01" src="https://github.com/user-attachments/assets/1c10872a-8c3d-4fb5-9d26-221ccac74c85" />
+Figure: Class diagram of flutter_network_layer_core and flutter_network_layer_dio with an example flutter application (Production section in the figure).
+
 ### Command Pattern Like Request Management
 
 This package uses an architecture that is similar to the command pattern to manage requests.
