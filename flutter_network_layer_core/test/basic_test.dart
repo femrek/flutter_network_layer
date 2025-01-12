@@ -27,14 +27,30 @@ void main() async {
       final result = await invoker.request(request);
 
       expect(result, isA<SuccessResponseResult>());
-      result.when(
+
+      // result.when test
+      final resultData = result.when(
         success: (success) {
           expect(success.data.field1, 'pong');
+          return success.data;
         },
         error: (error) {
           fail('Error: ${error.message}');
         },
       );
+      expect(resultData.field1, 'pong');
+
+      // result.whenAsync test
+      final resultData2 = await result.whenAsync(
+        success: (success) async {
+          expect(success.data.field1, 'pong');
+          return success.data;
+        },
+        error: (error) async {
+          fail('Error: ${error.message}');
+        },
+      );
+      expect(resultData2.field1, 'pong');
     });
   });
 }

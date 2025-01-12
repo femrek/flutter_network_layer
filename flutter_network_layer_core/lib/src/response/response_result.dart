@@ -26,30 +26,42 @@ sealed class ResponseResult<T extends ResponseModel> {
 
   /// Executes the given function based on the type of the response.
   ///
+  /// If the response is a success, [success] function will be executed
+  /// otherwise [error] function will be executed
+  ///
+  /// Optionally, this function can return a value that is returned by error or
+  /// success functions.
+  ///
   /// See also [whenAsync].
-  void when({
-    required void Function(SuccessResponseResult<T> response) success,
-    required void Function(ErrorResponseResult<T> response) error,
+  E when<E>({
+    required E Function(SuccessResponseResult<T> response) success,
+    required E Function(ErrorResponseResult<T> response) error,
   }) {
     if (isSuccess) {
-      success(asSuccess);
+      return success(asSuccess);
     } else {
-      error(asError);
+      return error(asError);
     }
   }
 
   /// Executes the given async/sync function based on the type of the response.
   ///
+  /// If the response is a success, [success] function will be executed
+  /// otherwise [error] function will be executed
+  ///
+  /// Optionally, this function can return a value that is returned by error or
+  /// success functions.
+  ///
   /// This is an asynchronous version of [when]. Allows to execute an async
   /// process and wait for the result.
-  Future<void> whenAsync({
-    required FutureOr<void> Function(SuccessResponseResult<T> response) success,
-    required FutureOr<void> Function(ErrorResponseResult<T> response) error,
+  Future<E> whenAsync<E>({
+    required FutureOr<E> Function(SuccessResponseResult<T> response) success,
+    required FutureOr<E> Function(ErrorResponseResult<T> response) error,
   }) async {
     if (isSuccess) {
-      await success(asSuccess);
+      return await success(asSuccess);
     } else {
-      await error(asError);
+      return await error(asError);
     }
   }
 }

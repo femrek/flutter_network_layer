@@ -1,3 +1,7 @@
+## 0.3.0
+
+* `when` and `whenAsync` functions of `ResponseResult` class are updated to be able to return a custom data.
+
 ## 0.2.1
 
 * Readme updated.
