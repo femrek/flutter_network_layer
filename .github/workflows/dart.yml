@@ -95,8 +95,11 @@ jobs:
       - name: Read CHANGELOG.md
         id: change_log
         run: |
-          LOG_TEMP=`./scripts/change_log_reader.py ./flutter_network_layer${{ env.package_name }}/CHANGELOG.md ${{ github.ref_name }}`
-          echo "change_log=${LOG_TEMP}" >> $GITHUB_ENV
+          {
+            echo 'change_log<<EOF'
+            ./scripts/change_log_reader.py ./flutter_network_layer${{ env.package_name }}/CHANGELOG.md ${{ github.ref_name }}
+            echo EOF
+          } >> "$GITHUB_ENV"
 
       - name: Create Release
         id: create_release
