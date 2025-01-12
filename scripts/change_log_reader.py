@@ -19,6 +19,16 @@ if not version:
     sys.stderr.write("Version input not found!\n")
     sys.exit(1)
 
+if version.startswith('core_v'):
+    version = version[6:]
+elif version.startswith('dio_v'):
+    version = version[5:]
+elif version.startswith('v'):
+    version = version[1:]
+else:
+    sys.stderr.write("Version input not valid!\n")
+    sys.exit(1)
+
 # get the change log
 with open(file, 'r') as f:
     change_log = f.read()
