@@ -1,3 +1,8 @@
+## 0.3.0
+
+* flutter_network_layer_core dependency updated to v0.3.0
+* `when` and `whenAsync` functions of `ResponseResult` class are updated to be able to return a custom data.
+
 ## 0.2.0
 
 * flutter_network_layer_core dependency updated to v0.2.0

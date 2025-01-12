@@ -26,17 +26,24 @@ void main() {
 
       final response = await networkManager.request(RequestTestUser());
 
-      response.when(
+      final responseData = response.when(
         success: (response) {
           expect(response.data, isA<ResponseTestUser>());
           expect(response.data.id, '1');
           expect(response.data.name, 'test');
           expect(response.data.age, 20);
+
+          return response.data;
         },
         error: (response) {
           fail('error response: ${response.message}');
         },
       );
+
+      expect(responseData, isA<ResponseTestUser>());
+      expect(responseData.id, '1');
+      expect(responseData.name, 'test');
+      expect(responseData.age, 20);
 
       await server.close(force: true);
     });
