@@ -1,3 +1,7 @@
+## 0.2.1
+
+* Readme updated.
+
 ## 0.2.0
 
 * `IRequestCommand` interface turned into `RequestCommand` abstract class.
