@@ -11,6 +11,14 @@ To use in your Dart/Flutter project:
 Or, implement your own
 with [flutter_network_layer_core][gh_flutter_network_layer_core] ([pub.dev][pd_flutter_network_layer_core]).
 
+## Tree of the Project
+
+```plaintext
+                flutter_network_layer_core
+                       /           \
+    flutter_network_layer_dio   (other implementations...)
+```
+
 ## Examples
 
 - [Flutter example with Dio implementation][gh_example_flutter_dio] is an example Flutter project that shows how to
