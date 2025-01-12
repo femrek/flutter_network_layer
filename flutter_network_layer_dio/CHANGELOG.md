@@ -1,7 +1,6 @@
 ## 0.2.0
 
 * flutter_network_layer_core dependency updated to v0.2.0
-* 
 
 ## 0.1.3
 

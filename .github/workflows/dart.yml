@@ -89,8 +89,14 @@ jobs:
             echo "is_prerelease=false" >> $GITHUB_ENV
           fi
 
-      - name: list files
+      - name: Debug list files
         run: ls -la
+
+      - name: Read CHANGELOG.md
+        id: changelog
+        run: |
+          LOG_TEMP=`./scripts/change_log_reader.py ./flutter_network_layer${{ env.package_name }}/CHANGELOG.md ${{ github.ref_name }}`
+          echo "change_log=$(LOG_TEMP)" >> $GITHUB_ENV
 
       - name: Create Release
         id: create_release
