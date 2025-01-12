@@ -96,7 +96,7 @@ jobs:
         id: change_log
         run: |
           LOG_TEMP=`./scripts/change_log_reader.py ./flutter_network_layer${{ env.package_name }}/CHANGELOG.md ${{ github.ref_name }}`
-          echo "change_log=$(LOG_TEMP)" >> $GITHUB_ENV
+          echo "change_log=${LOG_TEMP}" >> $GITHUB_ENV
 
       - name: Create Release
         id: create_release
@@ -106,14 +106,13 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           release_name: Release ${{ github.ref_name }}
-          body: |
-             ${{ env.change_log }}
+          body: ${{ env.change_log }}
           draft: false
           prerelease: ${{ steps.is_prerelease.outputs.is_prerelease }}
 
       - name: Debug package name
         run: |
-          echo "Package name is: ${{ steps.package_name.outputs.package_name }}"
+          echo "Package name is: ${{ env.package_name }}"
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
