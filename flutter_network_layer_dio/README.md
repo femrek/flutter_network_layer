@@ -1,8 +1,12 @@
-# flutter_network_layer_dio The Implementation of flutter_network_layer_core with Dio.
+# Flutter Network Layer
+
+**flutter_network_layer_dio:** [GitHub][gh_flutter_network_layer_dio] | [pub.dev][pd_flutter_network_layer_dio]
+
+# flutter_network_layer_dio
 
 Provides the implementation of the network layer with
-[Dio](https://pub.dev/packages/dio) package. Includes the network invoker that is defined in
-[flutter_network_layer_core.](https://github.com/femrek/flutter_network_layer/tree/main/flutter_network_layer_core)
+[Dio][pd_dio] package. So, includes the implementation of network invoker with Dio that is defined
+in [flutter_network_layer_core.][gh_flutter_network_layer_core]
 
 ## Table of Contents
 
@@ -17,8 +21,17 @@ Provides the implementation of the network layer with
 
 ## General Information
 
-A modular architecture template for Flutter projects with a network layer. This template is designed to provide a
-network module that can be imported into any Flutter project uses an api.
+This is an API request layer for Dart/Flutter projects.
+
+- The flow of the usage of this package:
+    - Create your `ResponseModel`'s to define the type of the response. (`GetTodoResponse` is the example in the
+      following class diagram)
+    - Create your `RequestCommand`'s to define the properties of the request. (e.g. method, url path, headers, payload,
+      etc.) (`GetTodoRequestCommand` and `PostTodoRequestCommand` are the examples in the following class diagram)
+    - Create your `INetworkInvoker` object from an implementation of this package. (e.g. `DioNetworkInvoker`). Using
+      `get_it` is highly recommended to create a singleton instance of the `INetworkInvoker`.
+    - In business logic, create a `RequestCommand` object and send it to the `INetworkInvoker` object to get the
+      response.
 
 <img width="1266" alt="Screenshot 2025-01-11 at 02 58 01" src="https://github.com/user-attachments/assets/1c10872a-8c3d-4fb5-9d26-221ccac74c85" />
 Figure: Class diagram of flutter_network_layer_core and flutter_network_layer_dio with an example flutter application (Production section in the figure).
@@ -36,21 +49,29 @@ to the server by executing the `request` method of the `INetworkInvoker`.
 
 ### Implementation with Dio
 
-The network layer is implemented with Dio. Another implementation can be used by implementing the `INetworkInvoker`
-interface easily.
+[Dio][pd_dio] is a powerful HTTP client for Dart/Flutter projects. This package provides an implementation of the
+`INetworkInvoker` interface with Dio named `DioNetworkInvoker`.
 
 ## Features
 
 - Modular and easily pluggable architecture.
 - Command-pattern-like request management.
-- Built-in support for Dio.
 - Easy integration with dependency injection frameworks like `get_it`.
 - Logging trigger function to integrate with logger of the product level.
 
 ## Use in Your Project
 
+**Tests:**
 The tests in the `test` directory demonstrates how to use the network layer. Also, the `example` application is a simple
-Flutter application that uses this network layer to fetch data from a server.
+Dart program that uses this package to fetch data from a server.
+
+**Example Project:**
+[example_flutter_dio][gh_example_flutter_dio] is a good example that shows how to use `flutter_network_layer_dio` in a
+Flutter project. This example also includes `get_it` to create a singleton instance of the `INetworkInvoker` with the
+`DioNetworkInvoker`implementation. As logger, `logger` package is used in this example and `onLog` function of the
+`DioNetworkInvoker` is set to receive logs from this package.
+
+Follow the steps below to use the network layer in your Dart/Flutter project:
 
 - Add the network module as a dependency in the `pubspec.yaml` file of the project.
 
@@ -138,8 +159,8 @@ final class RequestUser extends RequestCommand<ResponseUser> {
 }
 ```
 
-- Use the network layer in your project. Dependency injection is used in the example project, and it is recommended. You
-  can use the network layer without dependency injection as well.
+- Finally, you can use the network invoker named `DioNetworkInvoker` to send the request to the server. The following
+  example demonstrates how to send a request to the server and handle the response.
 
 ```dart
 import 'package:flutter_network_layer_dio/flutter_network_layer_dio.dart';
@@ -223,3 +244,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+[gh_flutter_network_layer_core]: https://github.com/femrek/flutter_network_layer/tree/main/flutter_network_layer_core
+
+[pd_flutter_network_layer_core]: https://pub.dev/packages/flutter_network_layer_core
+
+[gh_flutter_network_layer_dio]: https://github.com/femrek/flutter_network_layer/tree/main/flutter_network_layer_dio
+
+[pd_flutter_network_layer_dio]: https://pub.dev/packages/flutter_network_layer_dio
+
+[gh_flutter_network_layer]: https://github.com/femrek/flutter_network_layer/tree/main/flutter_network_layer
+
+[pd_flutter_network_layer]: https://pub.dev/packages/flutter_network_layer
+
+[gh_example_flutter_dio]: https://github.com/femrek/flutter_network_layer/tree/main/example_flutter_dio
+
+[pd_dio]: https://pub.dev/packages/dio
+
