@@ -15,9 +15,8 @@ with [flutter_network_layer_core][gh_flutter_network_layer_core] ([pub.dev][pd_f
 
 ## Tree of the Project
 
-- The core package is a dependency over implementations.
-- flutter_network_layer brings all implementations together but it is not recommended to use. (use an implementaion instead)
-
+- The core package is a dependency for the implementations.
+- The flutter_network_layer combines all implementations, but its usage is not recommended. (Use a specific implementation instead.)
 
 ```plaintext
             flutter_network_layer_core
