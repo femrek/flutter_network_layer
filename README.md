@@ -15,10 +15,15 @@ with [flutter_network_layer_core][gh_flutter_network_layer_core] ([pub.dev][pd_f
 
 ## Tree of the Project
 
+- The core package is a dependency over implementations.
+- flutter_network_layer brings all implementations together but it is not recommended to use. (use an implementaion instead)
+
+
 ```plaintext
-                flutter_network_layer_core
-                       /           \
-    flutter_network_layer_dio   (other implementations...)
+            flutter_network_layer_core
+                   /           \
+flutter_network_layer_dio   (other implementations...)          flutter_network_layer
+            \____________________________\________________________________|
 ```
 
 ## Examples
