@@ -4,7 +4,9 @@ A package set to use as a network layer for Flutter projects.
 
 ## Getting Started
 
-To use in your Dart/Flutter project:
+Each implementation has its own instructions. Go one of the following implementation see readme. (There is only one implementation for now)
+
+To use in your Dart/Flutter project follow one of these:
 
 - [flutter_network_layer_dio][gh_flutter_network_layer_dio] ([pub.dev][pd_flutter_network_layer_dio])
 
