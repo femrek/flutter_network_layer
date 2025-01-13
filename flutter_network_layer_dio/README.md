@@ -28,7 +28,7 @@ This is an API request layer for Dart/Flutter projects.
       following class diagram)
     - Create your `RequestCommand`'s to define the properties of the request. (e.g. method, url path, headers, payload,
       etc.) (`GetTodoRequestCommand` and `PostTodoRequestCommand` are the examples in the following class diagram)
-    - Create your `INetworkInvoker` object from an implementation of this package. (e.g. `DioNetworkInvoker`). Using
+    - Create your `INetworkInvoker` object from an implementation of this package. (`DioNetworkInvoker`). Using
       `get_it` is highly recommended to create a singleton instance of the `INetworkInvoker`.
     - In business logic, create a `RequestCommand` object and send it to the `INetworkInvoker` object to get the
       response.
