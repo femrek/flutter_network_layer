@@ -6,6 +6,7 @@ on:
     tags:
       - 'v*' # Release tags for the bundle package
       - 'dio_v*' # Release tags for the dio implementation package
+      - 'dart_v*' # Release tags for the standard dart implementation package
       - 'core_v*' # Release tags for the core package
   pull_request:
     branches: [ "main" ]
@@ -24,6 +25,8 @@ jobs:
         run: dart pub get --no-example -C flutter_network_layer_core
       - name: Install dependencies for dio impl
         run: dart pub get --no-example -C flutter_network_layer_dio
+      - name: Install dependencies for dart impl
+        run: dart pub get --no-example -C flutter_network_layer_dart
       - name: Install dependencies for bundle
         run: dart pub get --no-example -C flutter_network_layer
 
@@ -32,6 +35,8 @@ jobs:
         run: dart format --output=none --set-exit-if-changed flutter_network_layer_core/lib
       - name: Verify formatting for dio impl
         run: dart format --output=none --set-exit-if-changed flutter_network_layer_dio/lib
+      - name: Verify formatting for dart impl
+        run: dart format --output=none --set-exit-if-changed flutter_network_layer_dart/lib
       - name: Verify formatting for bundle
         run: dart format --output=none --set-exit-if-changed flutter_network_layer/lib
 
@@ -40,6 +45,8 @@ jobs:
         run: dart analyze flutter_network_layer_core/lib
       - name: Analyze project source for dio impl
         run: dart analyze flutter_network_layer_dio/lib
+      - name: Analyze project source for dart impl
+        run: dart analyze flutter_network_layer_dart/lib
       - name: Analyze project source for bundle
         run: dart analyze flutter_network_layer/lib
 
@@ -48,6 +55,8 @@ jobs:
         run: cd flutter_network_layer_core && dart test
       - name: Run tests for dio implementation
         run: cd flutter_network_layer_dio && dart test
+      - name: Run tests for dart implementation
+        run: cd flutter_network_layer_dart && dart test
 
   # Create a GitHub release only if it is a tag push
   release:
@@ -66,6 +75,8 @@ jobs:
         run: |
           if [[ ${{ github.ref }} == refs/tags/dio_v* ]]; then
             echo "package_name=_dio" >> $GITHUB_ENV
+          elif [[ ${{ github.ref }} == refs/tags/dart_v* ]]; then
+            echo "package_name=_dart" >> $GITHUB_ENV
           elif [[ ${{ github.ref }} == refs/tags/core_v* ]]; then
             echo "package_name=_core" >> $GITHUB_ENV
           elif [[ ${{ github.ref }} == refs/tags/v* ]]; then
@@ -142,6 +153,8 @@ jobs:
         id: package_name
         run: |
           if [[ ${{ github.ref }} == refs/tags/dio_v* ]]; then
+            echo "package_name=_dio" >> $GITHUB_ENV
+          elif [[ ${{ github.ref }} == refs/tags/dart_v* ]]; then
             echo "package_name=_dio" >> $GITHUB_ENV
           elif [[ ${{ github.ref }} == refs/tags/core_v* ]]; then
             echo "package_name=_core" >> $GITHUB_ENV
