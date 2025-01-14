@@ -34,7 +34,9 @@ This is an API request layer for Dart/Flutter projects.
       response.
 
 <img width="1266" alt="Screenshot 2025-01-11 at 02 58 01" src="https://github.com/user-attachments/assets/1c10872a-8c3d-4fb5-9d26-221ccac74c85" />
-Figure: Class diagram of flutter_network_layer_core and flutter_network_layer_dio with an example flutter application (Production section in the figure).
+
+Figure: Class diagram of an example flutter application (Production section in the figure) with
+flutter_network_layer_core and flutter_network_layer_dio.
 
 ### Command Pattern Like Request Management
 

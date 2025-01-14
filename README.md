@@ -4,7 +4,8 @@ A package set to use as a network layer for Flutter projects.
 
 ## Getting Started
 
-Each implementation has its own instructions. Go one of the following implementation see readme. (There is only one implementation for now)
+Each implementation has its own instructions. Go one of the following implementation see readme. (There is only one
+implementation for now)
 
 To use in your Dart/Flutter project follow one of these:
 
@@ -16,7 +17,8 @@ with [flutter_network_layer_core][gh_flutter_network_layer_core] ([pub.dev][pd_f
 ## Tree of the Project
 
 - The core package is a dependency for the implementations.
-- The flutter_network_layer combines all implementations, but its usage is not recommended. (Use a specific implementation instead.)
+- The flutter_network_layer combines all implementations, but its usage is not recommended. (Use a specific
+  implementation instead.)
 
 ```plaintext
             flutter_network_layer_core
@@ -29,6 +31,13 @@ flutter_network_layer_dio   (other implementations...)          flutter_network_
 
 - [Flutter example with Dio implementation][gh_example_flutter_dio] is an example Flutter project that shows how to
   use `flutter_network_layer_dio` in a Flutter project.
+
+## Example Class Diagram
+
+<img width="1266" alt="Screenshot 2025-01-11 at 02 58 01" src="https://github.com/user-attachments/assets/1c10872a-8c3d-4fb5-9d26-221ccac74c85" />
+
+Figure: Class diagram of an example flutter application (Production section in the figure) with
+flutter_network_layer_core and flutter_network_layer_dio.
 
 ## License
 
