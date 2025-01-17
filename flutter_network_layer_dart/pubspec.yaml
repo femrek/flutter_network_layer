@@ -8,7 +8,6 @@ environment:
 
 dependencies:
   flutter_network_layer_core: ^0.3.0
-  dio: ^5.7.0
 
 dev_dependencies:
   test: ^1.25.14
