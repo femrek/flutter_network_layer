@@ -13,5 +13,6 @@ dev_dependencies:
     path: ./flutter_network_layer_dart
 
   test: ^1.25.14
+  http_test_server: ^0.1.0
   very_good_analysis: ^7.0.0
 

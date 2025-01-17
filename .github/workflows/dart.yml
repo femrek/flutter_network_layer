@@ -51,6 +51,8 @@ jobs:
         run: dart analyze flutter_network_layer/lib
 
       # Run tests
+      - name: Run root tests
+        run: dart test
       - name: Run tests for core
         run: cd flutter_network_layer_core && dart test
       - name: Run tests for dio implementation
