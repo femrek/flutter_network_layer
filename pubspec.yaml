@@ -1,0 +1,17 @@
+name: flutter_network_layer
+description: "Test the flutter_network_layer_core and its all implementations."
+publish_to: 'none'
+version: 0.0.1
+
+environment:
+  sdk: ^3.6.0
+
+dev_dependencies:
+  flutter_network_layer_dio:
+    path: ./flutter_network_layer_dio
+  flutter_network_layer_dart:
+    path: ./flutter_network_layer_dart
+
+  test: ^1.25.14
+  very_good_analysis: ^7.0.0
+
