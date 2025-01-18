@@ -9,4 +9,8 @@ abstract interface class INetworkInvoker {
   /// Performs a request and returns the response.
   Future<ResponseResult<T>> request<T extends ResponseModel>(
       RequestCommand<T> request);
+
+  /// The callback function to trigger when a log is received from this
+  /// network invoker.
+  OnNetworkLog get onLog;
 }
