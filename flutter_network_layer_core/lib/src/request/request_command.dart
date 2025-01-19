@@ -34,4 +34,19 @@ abstract class RequestCommand<T extends ResponseModel> {
 
   /// The callback for the progress of the response.
   OnProgressCallback? get onReceiveProgressUpdate => null;
+
+  /// The log string of the request. Can be overridden to provide a custom log
+  /// string.
+  ///
+  /// The default implementation returns a string that contains the method,
+  /// path, payload type, headers, and data.
+  ///
+  /// The log helper of the package uses this method to log the request data.
+  /// So, if you want to customize the log string, you can override this method.
+  String toLogString() {
+    return '$runtimeType ${method.value} $path '
+        'Payload Type: $payloadType '
+        'Headers: $headers '
+        'Data: $data';
+  }
 }

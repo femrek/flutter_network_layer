@@ -40,6 +40,11 @@ sealed class ResponseModel {
       throw UnimplementedError('Unknown response model type.');
     }
   }
+
+  /// Converts the instance to a loggable string.
+  ///
+  /// This method is useful for logging the response data.
+  String toLogString();
 }
 
 /// Interface for JSON responses from the server.
@@ -56,6 +61,11 @@ abstract class JsonResponseModel extends ResponseModel {
 
   /// Converts the map or list to an instance.
   JsonResponseModel fromJson(dynamic json);
+
+  @override
+  String toLogString() {
+    return '$runtimeType: ${toJson()}';
+  }
 }
 
 /// Interface for responses from the server.
@@ -74,4 +84,9 @@ abstract class CustomResponseModel extends ResponseModel {
 
   /// Converts the plain string to an instance.
   CustomResponseModel fromString(String plainString);
+
+  @override
+  String toLogString() {
+    return '$runtimeType: ${toPlainString()}';
+  }
 }

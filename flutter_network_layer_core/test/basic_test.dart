@@ -64,7 +64,7 @@ class _SampleNetworkInvoker implements INetworkInvoker {
   late final String baseUrl;
 
   @override
-  OnNetworkLog get onLog => (_, __) {};
+  OnNetworkLog get onLog => (_) {};
 
   @override
   Future<void> init(String baseUrl) async {
