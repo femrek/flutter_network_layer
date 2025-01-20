@@ -1,3 +1,8 @@
+## 0.4.0
+
+* Logging components are added to the core library. The implementations must provide an `onLog` function.
+* Error types are created for the errors occurs in the network invokers.
+
 ## 0.3.0
 
 * `when` and `whenAsync` functions of `ResponseResult` class are updated to be able to return a custom data.

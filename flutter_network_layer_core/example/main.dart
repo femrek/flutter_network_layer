@@ -41,6 +41,13 @@ class NetworkManager implements INetworkInvoker {
       );
     }
   }
+
+  @override
+  OnNetworkLog get onLog => _onLog;
+
+  void _onLog(NetworkLog log) {
+    print('${log.type}: ${log.message}');
+  }
 }
 
 class RequestExample implements RequestCommand<ResponseExample> {
@@ -78,6 +85,14 @@ class RequestExample implements RequestCommand<ResponseExample> {
         'onSendProgressUpdate: $onSendProgressUpdate, '
         'onReceiveProgressUpdate: $onReceiveProgressUpdate, '
         'sampleModel: $sampleModel}';
+  }
+
+  @override
+  String toLogString() {
+    return 'RequestExample GET $path '
+        'Payload Type: $payloadType '
+        'Headers: $headers '
+        'Data: $data';
   }
 }
 
