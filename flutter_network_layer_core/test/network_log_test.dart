@@ -1,4 +1,5 @@
 import 'package:flutter_network_layer_core/flutter_network_layer_core.dart';
+import 'package:flutter_network_layer_core/src/error/network_error.dart';
 import 'package:test/test.dart';
 
 import 'utils/test_request_samples.dart';
@@ -116,8 +117,11 @@ void main() {
     group('RES_E', () {
       test('test 1', () {
         final log = NetworkLogErrorResponse(
-          statusCode: 400,
-          errorMessage: 'Bad Request',
+          error: NetworkErrorResponse(
+            statusCode: 400,
+            message: 'Bad Request',
+            stackTrace: StackTrace.current,
+          ),
         );
 
         expect(
@@ -246,7 +250,12 @@ void main() {
 
     group('ERROR', () {
       test('test 1', () {
-        const error = FormatException('Internal error message');
+        final error = NetworkErrorResponse(
+          statusCode: 500,
+          message: 'Internal error message',
+          stackTrace: StackTrace.current,
+        );
+
         final log = NetworkLogInternalError(error: error);
 
         expect(

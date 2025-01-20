@@ -1,4 +1,5 @@
 import 'package:flutter_network_layer_core/flutter_network_layer_core.dart';
+import 'package:flutter_network_layer_core/src/error/network_error.dart';
 import 'package:flutter_network_layer_core/src/logging/log_utils.dart';
 
 /// Callback for logging Dio requests and responses.
@@ -99,25 +100,20 @@ final class NetworkLogSuccessResponse<T extends ResponseModel>
 final class NetworkLogErrorResponse extends NetworkLog {
   /// Creates an error response log.
   ///
-  /// [statusCode] is the status code of the response. [errorMessage] is the
-  /// error message of the response.
+  /// [error] has the status code and error message of the response.
   NetworkLogErrorResponse({
-    required this.statusCode,
-    required this.errorMessage,
+    required this.error,
     super.stackTrace,
   });
 
-  /// The status code of the response.
-  final int statusCode;
-
-  /// The error message of the response.
-  final String errorMessage;
+  /// The error response that contains the status code and error message.
+  final NetworkErrorResponse error;
 
   @override
   String get type => 'RES_E';
 
   @override
-  String get message => 'Response Failed: $statusCode $errorMessage';
+  String get message => 'Response Failed: ${error.statusCode} ${error.message}';
 }
 
 /// The log type that is used for printing the request logs.
@@ -180,7 +176,7 @@ final class NetworkLogInternalError extends NetworkLog {
   });
 
   /// The error that is thrown in the local code.
-  final Object error;
+  final NetworkErrorBase error;
 
   @override
   String get type => 'ERROR';
