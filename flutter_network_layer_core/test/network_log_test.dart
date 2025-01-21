@@ -1,5 +1,4 @@
 import 'package:flutter_network_layer_core/flutter_network_layer_core.dart';
-import 'package:flutter_network_layer_core/src/error/network_error.dart';
 import 'package:test/test.dart';
 
 import 'utils/test_request_samples.dart';

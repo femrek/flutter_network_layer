@@ -36,5 +36,25 @@ void main() {
 
       await server.close(force: true);
     });
+
+    test('unresolved host', () async {
+      final invoker = DartNetworkInvoker();
+      await invoker.init('http://unresolved-host');
+
+      final responseResult = await invoker.request(TestRequest1());
+
+      responseResult.when(
+        success: (_) {
+          fail('The request should fail');
+        },
+        error: (error) {
+          expect(
+            error.isFromLocal,
+            isTrue,
+            reason: 'The error should be from local',
+          );
+        },
+      );
+    });
   });
 }

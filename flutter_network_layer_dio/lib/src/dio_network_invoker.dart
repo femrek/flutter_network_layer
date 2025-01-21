@@ -55,6 +55,7 @@ final class DioNetworkInvoker implements INetworkInvoker {
     onLog(NetworkLogTrace.start(
       message: '${request.method.value} ${request.path}',
     ));
+    onLog(NetworkLogRequest(request: request));
 
     final result = await _request(request);
 
@@ -65,31 +66,7 @@ final class DioNetworkInvoker implements INetworkInvoker {
           data: response.data,
         ));
       },
-      error: (response) {
-        if (response.isFromServer) {
-          onLog(NetworkLogErrorResponse(
-            error: NetworkErrorResponse(
-              stackTrace: StackTrace.current,
-              statusCode: response.statusCode!,
-              message: response.message,
-            ),
-          ));
-        } else if (response.isFromLocal) {
-          onLog(NetworkLogInternalError(
-            error: NetworkError(
-              stackTrace: StackTrace.current,
-              message: response.message,
-            ),
-          ));
-        } else {
-          onLog(NetworkLogInternalError(
-            error: NetworkError(
-              message: 'Undefined error type in DioNetworkInvoker',
-              stackTrace: StackTrace.current,
-            ),
-          ));
-        }
-      },
+      error: (response) {},
     );
 
     onLog(NetworkLogTrace.end(
@@ -114,8 +91,6 @@ final class DioNetworkInvoker implements INetworkInvoker {
           payload = FormData.fromMap(request.data);
       }
     }
-
-    onLog(NetworkLogRequest(request: request));
 
     // perform request
     try {
