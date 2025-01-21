@@ -1,3 +1,7 @@
+## 0.4.0
+
+* flutter_network_layer_dio is updated to 0.4.0 and flutter_network_layer_dart is added.
+
 ## 0.3.0
 
 * flutter_network_layer_dio is updated to 0.3.0.
