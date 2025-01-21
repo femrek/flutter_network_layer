@@ -21,6 +21,8 @@ if not version:
 
 if version.startswith('core_v'):
     version = version[6:]
+elif version.startswith('dart_v'):
+    version = version[6:]
 elif version.startswith('dio_v'):
     version = version[5:]
 elif version.startswith('v'):
