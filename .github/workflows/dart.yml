@@ -157,7 +157,7 @@ jobs:
           if [[ ${{ github.ref }} == refs/tags/dio_v* ]]; then
             echo "package_name=_dio" >> $GITHUB_ENV
           elif [[ ${{ github.ref }} == refs/tags/dart_v* ]]; then
-            echo "package_name=_dio" >> $GITHUB_ENV
+            echo "package_name=_dart" >> $GITHUB_ENV
           elif [[ ${{ github.ref }} == refs/tags/core_v* ]]; then
             echo "package_name=_core" >> $GITHUB_ENV
           elif [[ ${{ github.ref }} == refs/tags/v* ]]; then
