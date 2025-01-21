@@ -4,9 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() async {
   final nm = DioNetworkInvoker(
-    onLog: (level, message) {
+    onLog: (log) {
       // ignore: avoid_print logger
-      print('API POST TEST: [${level.name}] $message');
+      print('API POST TEST: [${log.type}] ${log.type}');
     },
   );
   await nm.init('https://jsonplaceholder.typicode.com');

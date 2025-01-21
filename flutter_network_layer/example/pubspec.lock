@@ -76,23 +76,31 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.3.0"
+    version: "0.4.0"
   flutter_network_layer_core:
     dependency: transitive
     description:
       name: flutter_network_layer_core
-      sha256: a57d405ae022e9b17751c4556e1734f9d4aacc9208e54c2057461e2bec9b8b07
+      sha256: "77c83d70e4ba89a95752feeea1f8ea523ec171c28bf43cef690d61c8010634aa"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.0"
+    version: "0.4.1"
+  flutter_network_layer_dart:
+    dependency: transitive
+    description:
+      name: flutter_network_layer_dart
+      sha256: "1b36d905cc5a796c12b0ebcf55e021042bf2a43c96406ed3f44972c1f817ff28"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.0"
   flutter_network_layer_dio:
     dependency: transitive
     description:
       name: flutter_network_layer_dio
-      sha256: "9cd8d4a06a89ab1b7869645fcbf1fd60ae665499e33f76d28c4edc53b88a176d"
+      sha256: "0f56f358dc102694143267b19f4918382b3dec3da98f572ae564bb05ec1f48c6"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.0"
+    version: "0.4.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter

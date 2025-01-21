@@ -12,9 +12,9 @@ abstract final class AppNetworkInitializer {
     return DioNetworkInvoker(onLog: _onLog);
   }
 
-  static void _onLog(LogLevel level, String message) {
+  static void _onLog(NetworkLog log) {
     assert(() {
-      debugPrint('[${_right(12, level.name)}] $message');
+      debugPrint('[${_right(12, log.type)}] ${log.message}');
       return true;
     }(), '');
   }
