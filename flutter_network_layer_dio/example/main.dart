@@ -22,8 +22,8 @@ abstract final class AppNetworkManager {
   static final INetworkInvoker networkInvoker =
       DioNetworkInvoker(onLog: _onLog);
 
-  static void _onLog(LogLevel level, String message) {
-    print('[${level.name}] $message');
+  static void _onLog(NetworkLog log) {
+    print('[${log.type}] ${log.message}');
   }
 }
 

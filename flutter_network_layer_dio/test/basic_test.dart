@@ -78,11 +78,11 @@ void main() {
   });
 }
 
-void _onLog(LogLevel level, String message) {
+void _onLog(NetworkLog log) {
   // ignore: avoid_print test
   print(
     '${DateTime.now().toIso8601String()} '
-    '${level.name.toUpperCase()}: '
-    '$message',
+    '${log.type}: '
+    '${log.message}',
   );
 }

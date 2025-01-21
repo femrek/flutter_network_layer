@@ -1,3 +1,7 @@
+## 0.4.0
+
+* Logging is updated as core package is updated.
+
 ## 0.3.0
 
 * flutter_network_layer_core dependency updated to v0.3.0
