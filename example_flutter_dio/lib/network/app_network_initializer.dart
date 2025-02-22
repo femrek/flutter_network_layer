@@ -30,19 +30,9 @@ abstract final class AppNetworkInitializer {
     await invoker.init(AppNetworkConstants.baseUrl);
   }
 
-  static void _onLog(LogLevel level, String message) {
-    // log only if the level does not contain sensitive data.
-    if (!level.maySensitiveData) {
-      GetIt.I<ILogger>().t(
-        '[DioNetworkInvoker: ${_right(16, level.name)}] $message',
-      );
-    }
-  }
-
-  static String _right(int length, String content) {
-    if (content.length >= length) {
-      return content;
-    }
-    return content.padLeft(length - content.length);
+  static void _onLog(NetworkLog log) {
+    GetIt.I<ILogger>().t(
+      '[DioNetworkInvoker: ${log.type}] ${log.message}',
+    );
   }
 }
