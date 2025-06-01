@@ -186,7 +186,3 @@ SOFTWARE.
 [gh_flutter_network_layer_dio]: https://github.com/femrek/flutter_network_layer/tree/main/flutter_network_layer_dio
 
 [pd_flutter_network_layer_dio]: https://pub.dev/packages/flutter_network_layer_dio
-
-[gh_flutter_network_layer]: https://github.com/femrek/flutter_network_layer/tree/main/flutter_network_layer
-
-[pd_flutter_network_layer]: https://pub.dev/packages/flutter_network_layer

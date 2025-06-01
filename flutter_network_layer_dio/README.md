@@ -255,10 +255,6 @@ SOFTWARE.
 
 [pd_flutter_network_layer_dio]: https://pub.dev/packages/flutter_network_layer_dio
 
-[gh_flutter_network_layer]: https://github.com/femrek/flutter_network_layer/tree/main/flutter_network_layer
-
-[pd_flutter_network_layer]: https://pub.dev/packages/flutter_network_layer
-
 [gh_example_flutter_dio]: https://github.com/femrek/flutter_network_layer/tree/main/example_flutter_dio
 
 [pd_dio]: https://pub.dev/packages/dio
