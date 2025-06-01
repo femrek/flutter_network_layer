@@ -9,6 +9,8 @@ The core package of the Flutter Network Layer project.
 Provides the frame for following implementations:
 
 - [flutter_network_layer_dio][gh_flutter_network_layer_dio] ([pub.dev][pd_flutter_network_layer_dio])
+- [flutter_network_layer_dart][gh_flutter_network_layer_dart] ([pub.dev][pd_flutter_network_layer_dio]) (still under
+  development)
 
 ## Usage
 
@@ -186,3 +188,7 @@ SOFTWARE.
 [gh_flutter_network_layer_dio]: https://github.com/femrek/flutter_network_layer/tree/main/flutter_network_layer_dio
 
 [pd_flutter_network_layer_dio]: https://pub.dev/packages/flutter_network_layer_dio
+
+[gh_flutter_network_layer_dart]: https://github.com/femrek/flutter_network_layer/tree/main/flutter_network_layer_dart
+
+[pd_flutter_network_layer_dart]: https://pub.dev/packages/flutter_network_layer_dart
