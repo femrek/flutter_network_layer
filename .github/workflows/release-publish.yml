@@ -1,0 +1,141 @@
+name: Release and Publish
+
+on:
+  push:
+    branches:
+      - 'release/*'
+
+jobs:
+  pd-publish:
+    if: github.event.workflow_run.conclusion == 'success' && startsWith(github.ref, 'refs/heads/release')
+    permissions:
+      id-token: write
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - uses: dart-lang/setup-dart@v1
+
+      - name: Install dependencies for core
+        run: |
+          cd flutter_network_layer_core
+          dart pub get --no-example
+
+      - name: Install dependencies for dio
+        run: |
+          cd flutter_network_layer_dio
+          dart pub get --no-example
+
+      - name: Install dependencies for dart
+        run: |
+          cd flutter_network_layer_dart
+          dart pub get --no-example
+
+      - name: Publish core
+        run: |
+          cd flutter_network_layer_core
+          dart pub publish --force
+
+      - name: Publish dio
+        run: |
+          cd flutter_network_layer_dio
+          dart pub publish --force
+
+      - name: Publish dart
+        run: |
+          cd flutter_network_layer_dart
+          dart pub publish --force
+
+  gh-release:
+    needs: pd-publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Generate release zip
+        run: |
+          zip -r source_code_core.zip flutter_network_layer_core
+          zip -r source_code_dio_impl.zip flutter_network_layer_dio
+          zip -r source_code_dart_impl.zip flutter_network_layer_dart
+
+      - name: Read CHANGELOG.md
+        id: change_log
+        run: |
+          {
+            echo 'change_log<<EOF'
+            ./scripts/change_log_reader.py ./CHANGELOG.md ${{ github.ref_name }}
+            echo EOF
+          } >> "$GITHUB_ENV"
+          echo ${{ env.change_log }} > change_log.txt
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          body: ${{ env.change_log }}
+          draft: false
+          prerelease: ${{ steps.is_prerelease.outputs.is_prerelease }}
+
+      - name: Debug package name
+        run: |
+          echo "Package name is: ${{ env.package_name }}"
+
+      - name: Upload Release Asset Core
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: source_code_core.zip
+          asset_name: flutter_network_layer_core.zip
+          asset_content_type: application/zip
+
+      - name: Upload Release Asset Dio impl
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: source_code_dio_impl.zip
+          asset_name: flutter_network_layer_dio.zip
+          asset_content_type: application/zip
+
+      - name: Upload Release Asset Dart impl
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: source_code_dart_impl.zip
+          asset_name: flutter_network_layer_dart.zip
+          asset_content_type: application/zip
+
+  merge-to-main:
+    needs:
+      - pd-publish
+      - gh-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Merge branch
+        uses: devmasx/merge-branch@1.4.0
+        with:
+          type: now
+          from_branch: ${{ github.ref_name }}
+          target_branch: uat
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+

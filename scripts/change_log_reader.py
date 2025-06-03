@@ -20,11 +20,14 @@ if not version:
     sys.exit(1)
 
 if version.startswith('core_v'):
-    version = version[6:]
+    sys.stderr.write("Version input is outdated!\n")
+    sys.exit(1)
 elif version.startswith('dart_v'):
-    version = version[6:]
+    sys.stderr.write("Version input is outdated!\n")
+    sys.exit(1)
 elif version.startswith('dio_v'):
-    version = version[5:]
+    sys.stderr.write("Version input is outdated!\n")
+    sys.exit(1)
 elif version.startswith('v'):
     version = version[1:]
 else:

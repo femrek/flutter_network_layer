@@ -1,13 +1,10 @@
-name: Dart
+name: Dart Test and Prepare Release
 
 on:
   push:
     branches: [ "main" ]
     tags:
       - 'v*' # Release tags for the bundle package
-      - 'dio_v*' # Release tags for the dio implementation package
-      - 'dart_v*' # Release tags for the standard dart implementation package
-      - 'core_v*' # Release tags for the core package
   pull_request:
     branches: [ "main" ]
 
@@ -27,8 +24,6 @@ jobs:
         run: dart pub get --no-example -C flutter_network_layer_dio
       - name: Install dependencies for dart impl
         run: dart pub get --no-example -C flutter_network_layer_dart
-      - name: Install dependencies for bundle
-        run: dart pub get --no-example -C flutter_network_layer
 
       # Verify that the libraries are error free
       - name: Verify formatting for core
@@ -37,8 +32,6 @@ jobs:
         run: dart format --output=none --set-exit-if-changed flutter_network_layer_dio/lib
       - name: Verify formatting for dart impl
         run: dart format --output=none --set-exit-if-changed flutter_network_layer_dart/lib
-      - name: Verify formatting for bundle
-        run: dart format --output=none --set-exit-if-changed flutter_network_layer/lib
 
       # Analyze the source code
       - name: Analyze project source for core
@@ -47,8 +40,6 @@ jobs:
         run: dart analyze flutter_network_layer_dio/lib
       - name: Analyze project source for dart impl
         run: dart analyze flutter_network_layer_dart/lib
-      - name: Analyze project source for bundle
-        run: dart analyze flutter_network_layer/lib
 
       # Run tests
       - name: Run root tests
@@ -60,8 +51,7 @@ jobs:
       - name: Run tests for dart implementation
         run: cd flutter_network_layer_dart && dart test
 
-  # Create a GitHub release only if it is a tag push
-  release:
+  prepare-release:
     needs: test
     runs-on: ubuntu-latest
 
@@ -70,28 +60,19 @@ jobs:
 
     steps:
       - name: checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
 
       - name: determine package name by tag
         id: package_name
         run: |
-          if [[ ${{ github.ref }} == refs/tags/dio_v* ]]; then
-            echo "package_name=_dio" >> $GITHUB_ENV
-          elif [[ ${{ github.ref }} == refs/tags/dart_v* ]]; then
-            echo "package_name=_dart" >> $GITHUB_ENV
-          elif [[ ${{ github.ref }} == refs/tags/core_v* ]]; then
-            echo "package_name=_core" >> $GITHUB_ENV
-          elif [[ ${{ github.ref }} == refs/tags/v* ]]; then
+          if [[ ${{ github.ref }} == refs/tags/v* ]]; then
             echo "package_name=" >> $GITHUB_ENV
           else
             echo "::error::Unknown package name"
             exit 1
           fi
-
-      - name: Generate release zip
-        run: |
-          FOLDER_NAME=flutter_network_layer${{ steps.package_name.outputs.package_name }}
-          zip -r source_code.zip ${FOLDER_NAME}
 
       - name: Find if it is prerelease by first number of tag
         id: is_prerelease
@@ -110,69 +91,26 @@ jobs:
         run: |
           {
             echo 'change_log<<EOF'
-            ./scripts/change_log_reader.py ./flutter_network_layer${{ env.package_name }}/CHANGELOG.md ${{ github.ref_name }}
+            ./scripts/change_log_reader.py ./CHANGELOG.md ${{ github.ref_name }}
             echo EOF
           } >> "$GITHUB_ENV"
+          echo ${{ env.change_log }} > temp_change_log
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set CHANGELOG.md files
+        run: |
+          ./scripts/change_log_inserter.py temp_change_log ${{ github.ref_name }} flutter_network_layer_core/CHANGELOG.md 
+          ./scripts/change_log_inserter.py temp_change_log ${{ github.ref_name }} flutter_network_layer_dio/CHANGELOG.md 
+          ./scripts/change_log_inserter.py temp_change_log ${{ github.ref_name }} flutter_network_layer_dart/CHANGELOG.md 
+
+      - name: Set branch name
+        id: branch_name
+        run: |
+          echo "branch_name=release/${{ github.ref_name }}" >> $GITHUB_ENV
+
+      - uses: EndBug/add-and-commit@v9
         with:
-          tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
-          body: ${{ env.change_log }}
-          draft: false
-          prerelease: ${{ steps.is_prerelease.outputs.is_prerelease }}
-
-      - name: Debug package name
-        run: |
-          echo "Package name is: ${{ env.package_name }}"
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: source_code.zip
-          asset_name: flutter_network_layer${{ env.package_name }}.zip
-          asset_content_type: application/zip
-
-  publish:
-    needs: release
-    if: startsWith(github.ref, 'refs/tags/')
-    permissions:
-      id-token: write
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dart-lang/setup-dart@v1
-
-      - name: determine package name by tag
-        id: package_name
-        run: |
-          if [[ ${{ github.ref }} == refs/tags/dio_v* ]]; then
-            echo "package_name=_dio" >> $GITHUB_ENV
-          elif [[ ${{ github.ref }} == refs/tags/dart_v* ]]; then
-            echo "package_name=_dart" >> $GITHUB_ENV
-          elif [[ ${{ github.ref }} == refs/tags/core_v* ]]; then
-            echo "package_name=_core" >> $GITHUB_ENV
-          elif [[ ${{ github.ref }} == refs/tags/v* ]]; then
-            echo "package_name=" >> $GITHUB_ENV
-          else
-            echo "::error::Unknown package name"
-            exit 1
-          fi
-
-      - name: Install dependencies
-        run: |
-          cd flutter_network_layer${{ env.package_name }}
-          dart pub get --no-example
-
-      - name: Publish
-        run: |
-          cd flutter_network_layer${{ env.package_name }}   
-          dart pub publish --force
+          add: '**/CHANGELOG.md'
+          message: 'Update CHANGELOG.md files for release ${{ github.ref_name }}'
+          default_author: github_actions
+          fetch: false
+          new_branch: ${{ env.branch_name }}
