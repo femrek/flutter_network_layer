@@ -3,6 +3,8 @@ description: "Core library for flutter_network_layer. Includes base classes of f
 version: 0.4.1
 homepage: https://github.com/femrek/flutter_network_layer/tree/main/flutter_network_layer_core
 
+resolution: workspace
+
 environment:
   sdk: ^3.6.0
 
