@@ -107,6 +107,7 @@ jobs:
           default_author: github_actions
           push: true
           branch: main
+          allow_empty_commit: true
 
   pd-publish:
     needs: prepare-release
