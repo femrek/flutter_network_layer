@@ -25,7 +25,7 @@ jobs:
       - name: Install dependencies for dart impl
         run: dart pub get --no-example -C flutter_network_layer_dart
 
-      # Verify that the libraries are error free
+      # Verify that the libraries are error-free
       - name: Verify formatting for core
         run: dart format --output=none --set-exit-if-changed flutter_network_layer_core/lib
       - name: Verify formatting for dio impl
@@ -53,10 +53,8 @@ jobs:
 
   prepare-release:
     needs: test
-    runs-on: ubuntu-latest
-
-    # check if it is a tag push
     if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
 
     steps:
       - name: checkout code
@@ -102,15 +100,88 @@ jobs:
           ./scripts/change_log_inserter.py temp_change_log ${{ github.ref_name }} flutter_network_layer_dio/CHANGELOG.md 
           ./scripts/change_log_inserter.py temp_change_log ${{ github.ref_name }} flutter_network_layer_dart/CHANGELOG.md 
 
-      - name: Set branch name
-        id: branch_name
-        run: |
-          echo "branch_name=release/${{ github.ref_name }}" >> $GITHUB_ENV
-
       - uses: EndBug/add-and-commit@v9
         with:
           add: '**/CHANGELOG.md'
           message: 'Update CHANGELOG.md files for release ${{ github.ref_name }}'
           default_author: github_actions
-          fetch: false
-          new_branch: ${{ env.branch_name }}
+          push: true
+          branch: main
+
+  pd-publish:
+    needs: prepare-release
+    permissions:
+      id-token: write
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - uses: dart-lang/setup-dart@v1
+
+      - name: Install dependencies for core
+        run: |
+          cd flutter_network_layer_core
+          dart pub get --no-example
+
+      - name: Install dependencies for dio
+        run: |
+          cd flutter_network_layer_dio
+          dart pub get --no-example
+
+      - name: Install dependencies for dart
+        run: |
+          cd flutter_network_layer_dart
+          dart pub get --no-example
+
+      - name: Publish core
+        run: |
+          cd flutter_network_layer_core
+          dart pub publish --force
+
+      - name: Publish dio
+        run: |
+          cd flutter_network_layer_dio
+          dart pub publish --force
+
+      - name: Publish dart
+        run: |
+          cd flutter_network_layer_dart
+          dart pub publish --force
+
+  gh-release:
+    needs: prepare-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Read CHANGELOG.md
+        id: change_log
+        run: |
+          {
+            echo 'change_log<<EOF'
+            ./scripts/change_log_reader.py ./CHANGELOG.md ${{ github.ref_name }}
+            echo EOF
+          } >> "$GITHUB_ENV"
+          echo ${{ env.change_log }} > change_log.txt
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          body: ${{ env.change_log }}
+          draft: false
+          prerelease: ${{ steps.is_prerelease.outputs.is_prerelease }}
+
+      - name: Debug package name
+        run: |
+          echo "Package name is: ${{ env.package_name }}"
