@@ -22,24 +22,18 @@ jobs:
         run: dart pub get --no-example -C flutter_network_layer_core
       - name: Install dependencies for dio impl
         run: dart pub get --no-example -C flutter_network_layer_dio
-      - name: Install dependencies for dart impl
-        run: dart pub get --no-example -C flutter_network_layer_dart
 
       # Verify that the libraries are error-free
       - name: Verify formatting for core
         run: dart format --output=none --set-exit-if-changed flutter_network_layer_core/lib
       - name: Verify formatting for dio impl
         run: dart format --output=none --set-exit-if-changed flutter_network_layer_dio/lib
-      - name: Verify formatting for dart impl
-        run: dart format --output=none --set-exit-if-changed flutter_network_layer_dart/lib
 
       # Analyze the source code
       - name: Analyze project source for core
         run: dart analyze flutter_network_layer_core/lib
       - name: Analyze project source for dio impl
         run: dart analyze flutter_network_layer_dio/lib
-      - name: Analyze project source for dart impl
-        run: dart analyze flutter_network_layer_dart/lib
 
       # Run tests
       - name: Run root tests
@@ -48,8 +42,6 @@ jobs:
         run: cd flutter_network_layer_core && dart test
       - name: Run tests for dio implementation
         run: cd flutter_network_layer_dio && dart test
-      - name: Run tests for dart implementation
-        run: cd flutter_network_layer_dart && dart test
 
   prepare-release:
     needs: test
@@ -98,7 +90,6 @@ jobs:
         run: |
           ./scripts/change_log_inserter.py temp_change_log ${{ github.ref_name }} flutter_network_layer_core/CHANGELOG.md 
           ./scripts/change_log_inserter.py temp_change_log ${{ github.ref_name }} flutter_network_layer_dio/CHANGELOG.md 
-          ./scripts/change_log_inserter.py temp_change_log ${{ github.ref_name }} flutter_network_layer_dart/CHANGELOG.md 
 
       - uses: EndBug/add-and-commit@v9
         with:
@@ -132,11 +123,6 @@ jobs:
           cd flutter_network_layer_dio
           dart pub get --no-example
 
-      - name: Install dependencies for dart
-        run: |
-          cd flutter_network_layer_dart
-          dart pub get --no-example
-
       - name: Publish core
         run: |
           cd flutter_network_layer_core
@@ -145,11 +131,6 @@ jobs:
       - name: Publish dio
         run: |
           cd flutter_network_layer_dio
-          dart pub publish --force
-
-      - name: Publish dart
-        run: |
-          cd flutter_network_layer_dart
           dart pub publish --force
 
   gh-release:
