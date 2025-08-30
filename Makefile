@@ -14,7 +14,7 @@ check_pub_publish:
 	done
 	@for pkg in $(PACKAGES); do \
 		echo "Running pubspec version update for $$pkg..."; \
-		python3 scripts/pubspec_version_updater.py $$pkg/pubspec.yaml $(VERSION_PURE) \
+		python3 scripts/pubspec_version_updater.py $$pkg/pubspec.yaml $(VERSION_PURE); \
     done
 	@git tag $(VERSION)
 	@git cliff -o CHANGELOG.md
