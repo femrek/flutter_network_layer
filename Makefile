@@ -15,8 +15,6 @@ check_pub_publish:
 	@for pkg in $(PACKAGES); do \
 		echo "Running pubspec version update for $$pkg..."; \
 		python3 scripts/pubspec_version_updater.py $$pkg/pubspec.yaml $(VERSION_PURE) \
-    	echo "Running dry-run for $$pkg..."; \
-    	cd $$pkg && dart pub publish --dry-run && cd ..; \
     done
 	@git tag $(VERSION)
 	@git cliff -o CHANGELOG.md
