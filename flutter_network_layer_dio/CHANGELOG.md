@@ -1,7 +1,3 @@
-## 0.5.0
-
-
-
 ## 0.4.0
 
 * Logging is updated as core package is updated.

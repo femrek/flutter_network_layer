@@ -1,7 +1,3 @@
-## 0.5.0
-
-
-
 ## 0.4.1
 
 * Fix: `network_error.dart` file is exported in `flutter_network_layer_core.dart` file.

@@ -84,6 +84,9 @@ jobs:
           } >> "$GITHUB_ENV"
           echo ${{ env.change_log }} > temp_change_log
 
+      - name: Debug change log
+        run: cat temp_change_log
+
       - name: Set CHANGELOG.md files
         run: |
           ./scripts/change_log_inserter.py temp_change_log ${{ github.ref_name }} flutter_network_layer_core/CHANGELOG.md 
