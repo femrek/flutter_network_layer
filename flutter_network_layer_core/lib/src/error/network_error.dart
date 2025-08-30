@@ -53,6 +53,22 @@ final class NetworkErrorInvalidResponseType extends NetworkErrorBase {
   }
 }
 
+/// The error type for errors occurred in the network invoker about the payload
+/// type.
+final class NetworkErrorInvalidPayload extends NetworkErrorBase {
+  /// Creates a network error response.
+  NetworkErrorInvalidPayload({
+    required super.message,
+    required super.stackTrace,
+    super.error,
+  });
+
+  @override
+  String toString() {
+    return 'NetworkErrorInvalidPayload: $message';
+  }
+}
+
 /// The error type for general type of errors occurred in the network invoker.
 final class NetworkError extends NetworkErrorBase {
   /// Creates a network error.

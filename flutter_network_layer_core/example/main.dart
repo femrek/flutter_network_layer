@@ -37,7 +37,10 @@ class NetworkManager implements INetworkInvoker {
       );
     } else {
       return ErrorResponseResult.noResponse(
-        message: 'The sample model is not a JSON response model.',
+        error: NetworkErrorInvalidResponseType(
+          message: 'The sample model is not a JSON response model.',
+          stackTrace: StackTrace.current,
+        ),
       );
     }
   }

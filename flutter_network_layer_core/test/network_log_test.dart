@@ -52,18 +52,12 @@ void main() {
       });
 
       test('unspecified', () {
-        final log = NetworkLogTrace.unspecified();
+        final log = NetworkLogTrace();
 
         expect(
           log.type,
           'TRACE',
           reason: 'log type should be TRACE',
-        );
-
-        expect(
-          log.message,
-          contains('TRACE'),
-          reason: 'log message should contain TRACE label',
         );
 
         expect(
@@ -108,42 +102,6 @@ void main() {
         expect(
           log.message,
           contains('value1'),
-          reason: 'log message should contain response data',
-        );
-      });
-    });
-
-    group('RES_E', () {
-      test('test 1', () {
-        final log = NetworkLogErrorResponse(
-          error: NetworkErrorResponse(
-            statusCode: 400,
-            message: 'Bad Request',
-            stackTrace: StackTrace.current,
-          ),
-        );
-
-        expect(
-          log.type,
-          'RES_E',
-          reason: 'log type should be RES_E',
-        );
-
-        expect(
-          log.message,
-          contains('Response Failed'),
-          reason: 'log message should contain response data',
-        );
-
-        expect(
-          log.message,
-          contains('400'),
-          reason: 'log message should contain response data',
-        );
-
-        expect(
-          log.message,
-          contains('Bad Request'),
           reason: 'log message should contain response data',
         );
       });
@@ -197,11 +155,11 @@ void main() {
       test('test 1: no additional message', () {
         const baseUrl = 'https://example.com';
 
-        final log = NetworkLogInit(baseUrl: baseUrl);
+        final log = NetworkLogConfig(baseUrl: baseUrl);
 
         expect(
           log.type,
-          'INIT',
+          'CONFIG',
           reason: 'log type should be INIT',
         );
 
@@ -222,14 +180,14 @@ void main() {
         const baseUrl = 'https://example.com';
         const additionalMessage = 'sample additional message';
 
-        final log = NetworkLogInit(
+        final log = NetworkLogConfig(
           baseUrl: baseUrl,
           additionalMessage: additionalMessage,
         );
 
         expect(
           log.type,
-          'INIT',
+          'CONFIG',
           reason: 'log type should be INIT',
         );
 
@@ -255,7 +213,7 @@ void main() {
           stackTrace: StackTrace.current,
         );
 
-        final log = NetworkLogInternalError(error: error);
+        final log = NetworkLogError(error: error);
 
         expect(
           log.type,
@@ -267,26 +225,6 @@ void main() {
           log.message,
           contains(error.toString()),
           reason: 'log message should contain error message',
-        );
-      });
-    });
-
-    group('CUSTOM', () {
-      test('test 1', () {
-        const type = 'CUSTOM';
-        const message = 'Custom log message';
-        final log = NetworkLogCustom(type: type, message: message);
-
-        expect(
-          log.type,
-          type,
-          reason: 'log type should be $type',
-        );
-
-        expect(
-          log.message,
-          contains(message),
-          reason: 'log message should contain custom message',
         );
       });
     });

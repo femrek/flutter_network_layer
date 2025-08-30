@@ -1,5 +1,4 @@
 import 'package:flutter_network_layer_core/flutter_network_layer_core.dart';
-import 'package:flutter_network_layer_core/src/error/network_error.dart';
 import 'package:flutter_network_layer_core/src/logging/log_utils.dart';
 
 /// Callback for logging Dio requests and responses.
@@ -27,6 +26,13 @@ sealed class NetworkLog {
 
 /// Log type for trace logs.
 final class NetworkLogTrace extends NetworkLog with LogUtils {
+  /// Creates a trace log that is unspecified if it is start or end of a
+  /// function.
+  NetworkLogTrace({
+    String? message,
+  })  : _start = null,
+        _message = message;
+
   /// Creates a trace log that is start of a function.
   NetworkLogTrace.start({
     String? message,
@@ -39,13 +45,6 @@ final class NetworkLogTrace extends NetworkLog with LogUtils {
   })  : _start = false,
         _message = message;
 
-  /// Creates a trace log that is unspecified if it is start or end of a
-  /// function.
-  NetworkLogTrace.unspecified({
-    String? message,
-  })  : _start = null,
-        _message = message;
-
   final bool? _start;
 
   final String? _message;
@@ -55,10 +54,8 @@ final class NetworkLogTrace extends NetworkLog with LogUtils {
 
   @override
   String get message {
-    late final String prefix;
-    if (_start == null) {
-      prefix = 'TRACE';
-    } else {
+    var prefix = '';
+    if (_start != null) {
       prefix = _start ? 'START' : 'END  ';
     }
 
@@ -96,26 +93,6 @@ final class NetworkLogSuccessResponse<T extends ResponseModel>
   String get type => 'RES_S';
 }
 
-/// The log type that is used for printing the error responses.
-final class NetworkLogErrorResponse extends NetworkLog {
-  /// Creates an error response log.
-  ///
-  /// [error] has the status code and error message of the response.
-  NetworkLogErrorResponse({
-    required this.error,
-    super.stackTrace,
-  });
-
-  /// The error response that contains the status code and error message.
-  final NetworkErrorResponse error;
-
-  @override
-  String get type => 'RES_E';
-
-  @override
-  String get message => 'Response Failed: ${error.statusCode} ${error.message}';
-}
-
 /// The log type that is used for printing the request logs.
 final class NetworkLogRequest extends NetworkLog {
   /// Creates a request log.
@@ -138,9 +115,9 @@ final class NetworkLogRequest extends NetworkLog {
 
 /// The log type that is used for printing when the network invoker is being
 /// initialized.
-final class NetworkLogInit extends NetworkLog {
+final class NetworkLogConfig extends NetworkLog {
   /// Creates an init log.
-  NetworkLogInit({
+  NetworkLogConfig({
     required this.baseUrl,
     this.additionalMessage,
     super.stackTrace,
@@ -153,7 +130,7 @@ final class NetworkLogInit extends NetworkLog {
   final String? additionalMessage;
 
   @override
-  String get type => 'INIT';
+  String get type => 'CONFIG';
 
   @override
   String get message {
@@ -168,9 +145,9 @@ final class NetworkLogInit extends NetworkLog {
 
 /// The log type that is used for printing the errors that occur in the local
 /// code.
-final class NetworkLogInternalError extends NetworkLog {
+final class NetworkLogError extends NetworkLog {
   /// Creates an internal error log.
-  NetworkLogInternalError({
+  NetworkLogError({
     required this.error,
     super.stackTrace,
   });
@@ -183,24 +160,4 @@ final class NetworkLogInternalError extends NetworkLog {
 
   @override
   String get message => 'Internal Error: $error\n$stackTrace';
-}
-
-/// The log type that is used for printing custom logs that is not specified in
-/// the `flutter_network_layer_core` package.
-final class NetworkLogCustom extends NetworkLog {
-  /// Creates a custom log.
-  ///
-  /// [type] is the type of the log that corresponds to log level. [message] is
-  /// the content of the log.
-  NetworkLogCustom({
-    required this.type,
-    required this.message,
-    super.stackTrace,
-  });
-
-  @override
-  final String type;
-
-  @override
-  final String message;
 }

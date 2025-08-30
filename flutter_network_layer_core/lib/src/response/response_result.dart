@@ -99,7 +99,7 @@ final class ErrorResponseResult<T extends ResponseModel>
   /// [message] is the error message. It must not be null. [statusCode] is the
   /// status code of the response. It must not be null for server errors.
   ErrorResponseResult.withResponse({
-    required this.message,
+    required this.error,
     required int this.statusCode,
   });
 
@@ -108,11 +108,11 @@ final class ErrorResponseResult<T extends ResponseModel>
   ///
   /// [message] is the error message. It must not be null.
   ErrorResponseResult.noResponse({
-    required this.message,
+    required this.error,
   }) : statusCode = null;
 
   /// The error message of the response.
-  final String message;
+  String get message => error.message;
 
   /// Returns true if the error is from the server, otherwise false.
   ///
@@ -123,6 +123,8 @@ final class ErrorResponseResult<T extends ResponseModel>
   ///
   /// Also see [isFromServer].
   bool get isFromLocal => statusCode == null;
+
+  NetworkErrorBase error;
 
   @override
   final int? statusCode;

@@ -26,7 +26,7 @@ class DartNetworkInvoker implements INetworkInvoker {
     _baseUrl = baseUrl;
     _client = HttpClient();
 
-    onLog(NetworkLogInit(baseUrl: baseUrl));
+    onLog(NetworkLogConfig(baseUrl: baseUrl));
     onLog(NetworkLogTrace.end(message: 'baseUrl: $baseUrl'));
   }
 
@@ -42,15 +42,19 @@ class DartNetworkInvoker implements INetworkInvoker {
     try {
       result = await _request(request);
     } on Exception catch (e, s) {
-      onLog(NetworkLogInternalError(
+      onLog(NetworkLogError(
+        error: NetworkError(
+          message: 'Unexpected error occurred',
+          error: e,
+          stackTrace: s,
+        ),
+      ));
+      return ErrorResponseResult.noResponse(
         error: NetworkError(
           message: 'Unexpected error occurred',
           stackTrace: s,
           error: e,
         ),
-      ));
-      return ErrorResponseResult.noResponse(
-        message: 'Unexpected error occurred',
       );
     }
 
@@ -61,7 +65,10 @@ class DartNetworkInvoker implements INetworkInvoker {
           data: result.data,
         ));
       },
-      error: (_) {},
+      error: (errorResponse) {
+        final e = errorResponse.error;
+        onLog(NetworkLogError(error: e));
+      },
     );
 
     onLog(NetworkLogTrace.end(
@@ -80,14 +87,11 @@ class DartNetworkInvoker implements INetworkInvoker {
     try {
       rawResponse = await _sendRequest(url);
     } on SocketException catch (e, s) {
-      onLog(NetworkLogInternalError(
+      return ErrorResponseResult.noResponse(
         error: NetworkError(
           message: e.message,
           stackTrace: s,
         ),
-      ));
-      return ErrorResponseResult.noResponse(
-        message: e.message,
       );
     }
 
@@ -96,31 +100,25 @@ class DartNetworkInvoker implements INetworkInvoker {
     try {
       responseBody = await _extractResponseBody(rawResponse);
     } on Exception catch (e, s) {
-      onLog(NetworkLogInternalError(
+      return ErrorResponseResult.withResponse(
+        statusCode: rawResponse.statusCode,
         error: NetworkErrorInvalidResponseType(
           message: 'decode error',
           stackTrace: s,
           error: e,
         ),
-      ));
-      return ErrorResponseResult.withResponse(
-        message: e.toString(),
-        statusCode: rawResponse.statusCode,
       );
     }
 
     // check if the response is successful
     if (rawResponse.statusCode < 200 || rawResponse.statusCode >= 300) {
-      onLog(NetworkLogErrorResponse(
+      return ErrorResponseResult.withResponse(
+        statusCode: rawResponse.statusCode,
         error: NetworkErrorResponse(
           statusCode: rawResponse.statusCode,
           message: responseBody,
           stackTrace: StackTrace.current,
         ),
-      ));
-      return ErrorResponseResult.withResponse(
-        message: 'Request failed: $responseBody',
-        statusCode: rawResponse.statusCode,
       );
     }
 
@@ -132,29 +130,23 @@ class DartNetworkInvoker implements INetworkInvoker {
         final responseBodyEncoded = jsonDecode(responseBody);
         responseModelDynamic = sampleModel.fromJson(responseBodyEncoded);
       } on FormatException catch (e, s) {
-        onLog(NetworkLogInternalError(
+        return ErrorResponseResult.withResponse(
+          statusCode: rawResponse.statusCode,
           error: NetworkError(
             message: e.message,
             stackTrace: s,
           ),
-        ));
-        return ErrorResponseResult.withResponse(
-          message: 'Failed to parse response: $responseBody',
-          statusCode: rawResponse.statusCode,
         );
       }
     } else if (sampleModel is CustomResponseModel) {
       responseModelDynamic = sampleModel.fromString(responseBody);
     } else {
-      onLog(NetworkLogInternalError(
+      return ErrorResponseResult.withResponse(
+        statusCode: rawResponse.statusCode,
         error: NetworkError(
           message: 'Undefined sample model of request',
           stackTrace: StackTrace.current,
         ),
-      ));
-      return ErrorResponseResult.withResponse(
-        message: 'Undefined sample model of request: $request',
-        statusCode: rawResponse.statusCode,
       );
     }
 
@@ -163,15 +155,12 @@ class DartNetworkInvoker implements INetworkInvoker {
     if (responseModelDynamic is T) {
       responseModel = responseModelDynamic;
     } else {
-      onLog(NetworkLogInternalError(
+      return ErrorResponseResult.withResponse(
+        statusCode: rawResponse.statusCode,
         error: NetworkError(
           message: 'Invalid response model',
           stackTrace: StackTrace.current,
         ),
-      ));
-      return ErrorResponseResult.withResponse(
-        message: 'Invalid response model',
-        statusCode: rawResponse.statusCode,
       );
     }
 

@@ -77,8 +77,12 @@ class _SampleNetworkInvoker implements INetworkInvoker {
     final response = await http.get(Uri.parse('$baseUrl${request.path}'));
     if (response.statusCode != 200) {
       return ErrorResponseResult.withResponse(
-        message: 'Error: ${response.body}',
         statusCode: response.statusCode,
+        error: NetworkErrorResponse(
+          message: 'Error: ${response.body}',
+          statusCode: response.statusCode,
+          stackTrace: StackTrace.current,
+        ),
       );
     }
 
@@ -94,8 +98,11 @@ class _SampleNetworkInvoker implements INetworkInvoker {
       return SuccessResponseResult(data: model, statusCode: 200);
     } else {
       return ErrorResponseResult.withResponse(
-        message: 'Error: Invalid response model',
         statusCode: response.statusCode,
+        error: NetworkErrorInvalidResponseType(
+          message: 'Error: Invalid response model',
+          stackTrace: StackTrace.current,
+        ),
       );
     }
   }
