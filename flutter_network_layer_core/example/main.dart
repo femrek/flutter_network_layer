@@ -52,7 +52,7 @@ class NetworkManager implements INetworkInvoker {
 
 class RequestExample implements RequestCommand<ResponseExample> {
   @override
-  Map<String, dynamic> get data => const {};
+  Map<String, dynamic> get payload => const {};
 
   @override
   Map<String, dynamic> get headers => const {};
@@ -70,7 +70,7 @@ class RequestExample implements RequestCommand<ResponseExample> {
   String get path => '/example';
 
   @override
-  RequestPayloadType get payloadType => RequestPayloadType.json;
+  RequestPayloadType get payloadType => RequestPayloadType.other;
 
   @override
   ResponseExample get sampleModel => const ResponseExample.empty();
@@ -80,7 +80,7 @@ class RequestExample implements RequestCommand<ResponseExample> {
     return 'RequestExample{path: $path, '
         'method: $method, '
         'payloadType: $payloadType, '
-        'data: $data, '
+        'data: $payload, '
         'headers: $headers, '
         'onSendProgressUpdate: $onSendProgressUpdate, '
         'onReceiveProgressUpdate: $onReceiveProgressUpdate, '
@@ -92,7 +92,7 @@ class RequestExample implements RequestCommand<ResponseExample> {
     return 'RequestExample GET $path '
         'Payload Type: $payloadType '
         'Headers: $headers '
-        'Data: $data';
+        'Data: $payload';
   }
 }
 

@@ -19,12 +19,14 @@ abstract class RequestCommand<T extends ResponseModel> {
   /// The method of the request. GET, POST, PUT, DELETE, etc.
   HttpRequestMethod get method => HttpRequestMethod.get;
 
-  /// The type of the payload. Json, form data, etc.
-  RequestPayloadType get payloadType => RequestPayloadType.json;
+  /// The type of the payload. By default it is [RequestPayloadType.other] that
+  /// means no special handling is required. If it is
+  /// [RequestPayloadType.formData], the [payload] will be sent as form data.
+  RequestPayloadType get payloadType => RequestPayloadType.other;
 
-  /// The payload data of the request. Applicable in the form of Json or form
-  /// data.
-  Map<String, dynamic> get data => const {};
+  /// The payload data of the request. Applicable in the form of Json, form data
+  /// or string
+  Object? get payload => null;
 
   /// The headers of the request.
   Map<String, dynamic> get headers => const {};
@@ -47,6 +49,6 @@ abstract class RequestCommand<T extends ResponseModel> {
     return '$runtimeType ${method.value} $path '
         'Payload Type: $payloadType '
         'Headers: $headers '
-        'Data: $data';
+        'Data: $payload';
   }
 }

@@ -78,18 +78,26 @@ final class DioNetworkInvoker implements INetworkInvoker {
 
   Future<ResponseResult<T>> _request<T extends ResponseModel>(
       RequestCommand<T> request) async {
-    late final Response<dynamic> response;
+    final requestPayload = request.payload;
 
+    final Response<dynamic> response;
     final Object? payload;
-    if (request.data.isEmpty) {
-      payload = null;
-    } else {
-      switch (request.payloadType) {
-        case RequestPayloadType.json:
-          payload = request.data;
-        case RequestPayloadType.formData:
-          payload = FormData.fromMap(request.data);
-      }
+
+    switch (request.payloadType) {
+      case RequestPayloadType.formData:
+        if (requestPayload != null) {
+          payload = null;
+        } else if (requestPayload is Map<String, dynamic>) {
+          payload = FormData.fromMap(requestPayload);
+        } else {
+          return ErrorResponseResult.noResponse(
+            message:
+                'Invalid payload type. Payload must be Map<String, dynamic> '
+                'when payloadType is RequestPayloadType.formData.',
+          );
+        }
+      case RequestPayloadType.other:
+        payload = requestPayload;
     }
 
     // perform request

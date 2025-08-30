@@ -10,7 +10,7 @@ final class RequestTest1 extends RequestCommand<ResponseTest1> {
   final String field1;
 
   @override
-  Map<String, dynamic> get data => {
+  Map<String, dynamic> get payload => {
         'field1': field1,
       };
 
