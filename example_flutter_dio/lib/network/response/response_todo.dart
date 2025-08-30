@@ -15,6 +15,7 @@ final class ResponseTodo extends JsonResponseModel {
   /// Create an empty instance of [ResponseTodo].
   const ResponseTodo.empty() : this();
 
+  /// Create an instance of [ResponseTodo] from a JSON object.
   factory ResponseTodo.fromJson(Map<String, dynamic> json) {
     return ResponseTodo(
       userId: json['userId'] as int?,

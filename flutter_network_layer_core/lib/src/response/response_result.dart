@@ -124,6 +124,7 @@ final class ErrorResponseResult<T extends ResponseModel>
   /// Also see [isFromServer].
   bool get isFromLocal => statusCode == null;
 
+  /// The error that caused the failure.
   NetworkErrorBase error;
 
   @override

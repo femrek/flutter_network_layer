@@ -27,7 +27,7 @@ final class ResponseTest1 extends JsonResponseModel {
   }
 
   @override
-  toJson() {
+  dynamic toJson() {
     return {
       'field1': field1,
     };
