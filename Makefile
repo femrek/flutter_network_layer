@@ -21,3 +21,10 @@ check_pub_publish:
 	@git add .
 	@git commit --amend --no-edit
 	@git push origin tag $(VERSION)
+
+generate_changelogs:
+	python3 ./scripts/change_log_reader.py ./CHANGELOG.md $(VERSION) >> tmp
+	cat tmp
+	python3 ./scripts/change_log_inserter.py tmp $(VERSION) flutter_network_layer_core/CHANGELOG.md
+	python3 o/scripts/change_log_inserter.py tmp $(VERSION) flutter_network_layer_dio/CHANGELOG.md
+	rm tmp
