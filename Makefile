@@ -3,7 +3,7 @@ VERSION := v$(VERSION_PURE)
 PACKAGES := flutter_network_layer_core flutter_network_layer_dio
 
 pre_version_commit:
-	@git add .
+	@git add pubspec.yaml
 	@git commit -m "chore: ready for version $(VERSION)"
 
 check_pub_publish:
@@ -20,6 +20,7 @@ check_pub_publish:
 	@git cliff -o CHANGELOG.md
 	@git add .
 	@git commit --amend --no-edit
+	@git push origin main
 	@git push origin tag $(VERSION)
 
 generate_changelogs:
