@@ -1,3 +1,12 @@
+## 0.5.1 - 2025-09-02
+
+
+
+### 📚 Documentation
+
+- Improve clarity and grammar in README.md
+
+
 ## 0.5.0 - 2025-08-30
 
 
