@@ -5,7 +5,7 @@
 # flutter_network_layer_dio
 
 Provides the implementation of the network layer with
-[Dio][pd_dio] package. So, includes the implementation of network invoker with Dio that is defined
+[Dio][pd_dio] package. So, it includes the implementation of network invoker with Dio that is defined
 in [flutter_network_layer_core.][gh_flutter_network_layer_core]
 
 ## Table of Contents
@@ -15,7 +15,7 @@ in [flutter_network_layer_core.][gh_flutter_network_layer_core]
     - [Implementation with Dio](#implementation-with-dio)
 - [Features](#features)
 - [Use in Your Project](#use-in-your-project)
-- [Listen the Logs of the Package](#listen-the-logs-of-the-package)
+- [Listen_to the Logs of the Package](#listen-to-the-logs-of-the-package)
 - [Dio Interceptors](#dio-interceptors)
 - [License](#license)
 
@@ -23,10 +23,10 @@ in [flutter_network_layer_core.][gh_flutter_network_layer_core]
 
 This is an API request layer for Dart/Flutter projects.
 
-- The flow of the usage of this package:
+- The usage of this package:
     - Create your `ResponseModel`'s to define the type of the response. (`GetTodoResponse` is the example in the
       following class diagram)
-    - Create your `RequestCommand`'s to define the properties of the request. (e.g. method, url path, headers, payload,
+    - Create your `RequestCommand`'s to define the properties of the request. (e.g., method, url path, headers, payload,
       etc.) (`GetTodoRequestCommand` and `PostTodoRequestCommand` are the examples in the following class diagram)
     - Create your `INetworkInvoker` object from an implementation of this package. (`DioNetworkInvoker`). Using
       `get_it` is highly recommended to create a singleton instance of the `INetworkInvoker`.
@@ -45,9 +45,10 @@ This package uses an architecture that is similar to the command pattern to mana
 Each request is a command that can be executed as a parameter of the `request` method of the `INetworkInvoker`
 interface.
 
-Request commands can be created by implementing the `RequestCommand` class. The `RequestCommand` class has fields that
-describes the request such as http request method (GET, POST, etc.), request header, payload, etc. The request is sent
-to the server by executing the `request` method of the `INetworkInvoker`.
+You can create a request by implementing the `RequestCommand` class.  
+It defines the HTTP method (`GET`, `POST`, etc.), headers, payload, and other request details.
+
+To send the request, call the `request` method of the `INetworkInvoker`.
 
 ### Implementation with Dio
 
@@ -82,7 +83,7 @@ dependencies:
   flutter_network_layer_dio: <version code> # check the version code in the pubspec.yaml file of the module.
 ```
 
-- Create your own response models like following example. Also, you can use auto generation tools like
+- Create your own response models like the following example. Also, you can use auto generation tools like
   `json_serializable` to generate these models. The only point is that these models should implement the
   `JsonResponseModel` or `CustomResponseModel` and providing valid serialization methods.
 
@@ -128,7 +129,7 @@ final class ResponseUser extends JsonResponseModel {
 }
 ```
 
-- Create your own request models (commands) like following example. This class have to include information about the
+- Create your own request models (commands) like the following example. This class has to include information about the
   request will be sent to the server.
 
 ```dart
@@ -136,7 +137,7 @@ import 'package:flutter_network_layer_dio/flutter_network_layer_dio.dart';
 
 final class RequestUser extends RequestCommand<ResponseUser> {
   @override
-  Map<String, dynamic> get data => const {};
+  Object? get payload => const {};
 
   @override
   Map<String, dynamic> get headers => const {};
@@ -154,7 +155,7 @@ final class RequestUser extends RequestCommand<ResponseUser> {
   String get path => '/user';
 
   @override
-  RequestPayloadType get payloadType => RequestPayloadType.json;
+  RequestPayloadType get payloadType => RequestPayloadType.other;
 
   @override
   ResponseUser get sampleModel => const ResponseUser.empty();
@@ -184,7 +185,7 @@ void main() async {
 }
 ```
 
-## Listen the Logs of the Package
+## Listen to the Logs of the Package
 
 The package provides a logging trigger function to integrate with the logger of the product level. The logging trigger
 function can be set by calling the `setLoggingTrigger` function of the `NetworkModule` class.

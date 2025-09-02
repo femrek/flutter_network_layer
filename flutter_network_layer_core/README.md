@@ -6,15 +6,16 @@
 
 The core package of the Flutter Network Layer project.
 
-Provides the frame for following implementations:
+Provides the frame for the following implementations:
 
 - [flutter_network_layer_dio][gh_flutter_network_layer_dio] ([pub.dev][pd_flutter_network_layer_dio])
-- [flutter_network_layer_dart][gh_flutter_network_layer_dart] ([pub.dev][pd_flutter_network_layer_dio]) (still under
-  development)
 
 ## Usage
 
-**Recommended to use with above implementations.** However, you can implement your own network layer.
+**Recommended to use with the above implementations.** However, you can implement your own network layer.
+
+<details>
+<summary>Click to see how to implement</summary>
 
 - Create a `INetworkInvoker` implementation like that. This is already implemented in mentioned implementation packages.
 
@@ -36,7 +37,7 @@ class NetworkInvoker implements INetworkInvoker {
 }
 ```
 
-- Create your own response models like that. These models are specific to api response so they need to be implemented
+- Create your own response models like that. These models are specific to api response, so they need to be implemented
   in product level.
 
 ```dart
@@ -82,7 +83,7 @@ class ResponseExample extends JsonResponseModel {
 }
 ```
 
-- Create your own request models like that. These models are specific to api request so they need to be implemented
+- Create your own request models like that. These models are specific to api request, so they need to be implemented
   in product level.
 
 ```dart
@@ -116,7 +117,7 @@ class RequestUser implements RequestCommand<ResponseUser> {
 ```
 
 Or, the `RequestCommand` can be extended. Default values of the fields of the `RequestCommand` are already implemented
-in this method. But, you can override them if you need.
+in this method. But you can override them if you need.
 
 ```dart
 import 'package:flutter_network_layer_core/flutter_network_layer_core.dart';
@@ -154,6 +155,8 @@ void main() async {
   );
 }
 ```
+
+</details>
 
 ## License
 
