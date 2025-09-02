@@ -1,6 +1,26 @@
 ## 0.5.0
 
+### 🐛 Bug Fixes
 
+- Example project is updated to new version.
+
+- Example flutter dio app updated to new version of the packages.
+
+
+
+### 🚜 Refactor
+
+- Init monorepo
+
+- Update request payload handling and enum definitions
+
+- Enhance error handling and logging in network invoker.
+
+
+
+### 🧪 Testing
+
+- Root test extended.
 
 ## 0.4.1
 
