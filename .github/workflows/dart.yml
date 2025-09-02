@@ -83,7 +83,9 @@ jobs:
             ./scripts/change_log_reader.py ./CHANGELOG.md ${{ github.ref_name }}
             echo EOF
           } >> "$GITHUB_ENV"
-          echo ${{ env.change_log }} > temp_change_log
+
+      - name: save change log to file
+        run: echo "$change_log" > temp_change_log
 
       - name: Debug change log
         run: cat temp_change_log
