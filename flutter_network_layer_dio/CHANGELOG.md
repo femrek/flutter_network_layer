@@ -1,3 +1,9 @@
+## 0.5.1
+
+### 📚 Documentation
+
+- Improve clarity and grammar in README.md
+
 ## 0.5.0
 
 ### 🐛 Bug Fixes
