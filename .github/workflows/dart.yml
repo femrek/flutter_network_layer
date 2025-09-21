@@ -80,7 +80,7 @@ jobs:
         run: |
           {
             echo 'change_log<<EOF'
-            ./scripts/change_log_reader.py ./CHANGELOG.md ${{ github.ref_name }}
+            python3 ./scripts/change_log_reader.py ./CHANGELOG.md ${{ github.ref_name }}
             echo EOF
           } >> "$GITHUB_ENV"
 
@@ -92,8 +92,8 @@ jobs:
 
       - name: Set CHANGELOG.md files
         run: |
-          ./scripts/change_log_inserter.py temp_change_log ${{ github.ref_name }} flutter_network_layer_core/CHANGELOG.md 
-          ./scripts/change_log_inserter.py temp_change_log ${{ github.ref_name }} flutter_network_layer_dio/CHANGELOG.md 
+          python3 ./scripts/change_log_inserter.py temp_change_log ${{ github.ref_name }} flutter_network_layer_core/CHANGELOG.md 
+          python3 ./scripts/change_log_inserter.py temp_change_log ${{ github.ref_name }} flutter_network_layer_dio/CHANGELOG.md 
 
       - uses: EndBug/add-and-commit@v9
         with:
@@ -150,7 +150,7 @@ jobs:
         run: |
           {
             echo 'change_log<<EOF'
-            ./scripts/change_log_reader.py ./CHANGELOG.md ${{ github.ref_name }}
+            python3 ./scripts/change_log_reader.py ./CHANGELOG.md ${{ github.ref_name }}
             echo EOF
           } >> "$GITHUB_ENV"
           echo ${{ env.change_log }} > change_log.txt
