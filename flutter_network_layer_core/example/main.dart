@@ -27,22 +27,23 @@ class NetworkManager implements INetworkInvoker {
       RequestCommand<T> request) async {
     final dummyResponseJson = <String, dynamic>{'message': 'Hello, World!'};
 
-    final sampleModel = request.sampleModel;
-    if (sampleModel is JsonResponseModel) {
-      final dummyResponse = sampleModel.fromJson(dummyResponseJson) as T;
-
-      return SuccessResponseResult(
-        statusCode: 200,
-        data: dummyResponse,
-      );
-    } else {
-      return ErrorResponseResult.noResponse(
-        error: NetworkErrorInvalidResponseType(
-          message: 'The sample model is not a JSON response model.',
-          stackTrace: StackTrace.current,
-        ),
-      );
-    }
+    return request.responseFactory.when<ResponseResult<T>>(
+      json: (JsonResponseFactory<T> json) {
+        final dummyResponse = json.fromJson(dummyResponseJson);
+        return SuccessResponseResult(
+          statusCode: 200,
+          data: dummyResponse,
+        );
+      },
+      custom: (CustomResponseFactory<T> custom) {
+        return ErrorResponseResult.noResponse(
+          error: NetworkErrorInvalidResponseType(
+            message: 'The sample model is not a JSON response model.',
+            stackTrace: StackTrace.current,
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -76,7 +77,8 @@ class RequestExample implements RequestCommand<ResponseExample> {
   RequestPayloadType get payloadType => RequestPayloadType.other;
 
   @override
-  ResponseExample get sampleModel => const ResponseExample.empty();
+  final ResponseFactory<ResponseExample> responseFactory =
+      ResponseExampleFactory();
 
   @override
   String toString() {
@@ -87,7 +89,7 @@ class RequestExample implements RequestCommand<ResponseExample> {
         'headers: $headers, '
         'onSendProgressUpdate: $onSendProgressUpdate, '
         'onReceiveProgressUpdate: $onReceiveProgressUpdate, '
-        'sampleModel: $sampleModel}';
+        'responseFactory: $responseFactory}';
   }
 
   @override
@@ -99,7 +101,7 @@ class RequestExample implements RequestCommand<ResponseExample> {
   }
 }
 
-class ResponseExample extends JsonResponseModel {
+class ResponseExample extends ResponseModel {
   const ResponseExample({required this.message});
 
   const ResponseExample.empty() : message = '';
@@ -107,9 +109,18 @@ class ResponseExample extends JsonResponseModel {
   final String message;
 
   @override
-  Map<String, dynamic> toJson() => {
-        'message': message,
-      };
+  String toString() {
+    return 'ResponseExample{message: $message}';
+  }
+}
+
+class ResponseExampleFactory extends JsonResponseFactory<ResponseExample> {
+  factory ResponseExampleFactory() => _instance;
+
+  const ResponseExampleFactory._internal();
+
+  static const ResponseExampleFactory _instance =
+      ResponseExampleFactory._internal();
 
   @override
   ResponseExample fromJson(dynamic json) {
@@ -118,10 +129,5 @@ class ResponseExample extends JsonResponseModel {
     }
 
     return ResponseExample(message: json['message'] as String);
-  }
-
-  @override
-  String toString() {
-    return 'ResponseExample{message: $message}';
   }
 }

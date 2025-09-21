@@ -18,5 +18,5 @@ final class RequestTest1 extends RequestCommand<ResponseTest1> {
   String get path => '/basic_test';
 
   @override
-  ResponseTest1 get sampleModel => const ResponseTest1.empty();
+  final ResponseTest1Factory responseFactory = ResponseTest1Factory();
 }

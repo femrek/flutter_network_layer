@@ -1,6 +1,6 @@
 import 'package:flutter_network_layer_core/flutter_network_layer_core.dart';
 
-class ResponseTestUser extends JsonResponseModel {
+class ResponseTestUser extends ResponseModel {
   const ResponseTestUser({
     required this.id,
     required this.name,
@@ -15,6 +15,15 @@ class ResponseTestUser extends JsonResponseModel {
   final String id;
   final String name;
   final int age;
+}
+
+class ResponseTestUserFactory extends JsonResponseFactory<ResponseTestUser> {
+  factory ResponseTestUserFactory() => _instance;
+
+  const ResponseTestUserFactory._internal();
+
+  static const ResponseTestUserFactory _instance =
+      ResponseTestUserFactory._internal();
 
   @override
   ResponseTestUser fromJson(dynamic json) {
@@ -26,14 +35,5 @@ class ResponseTestUser extends JsonResponseModel {
       name: map['name'] as String,
       age: map['age'] as int,
     );
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'age': age,
-    };
   }
 }

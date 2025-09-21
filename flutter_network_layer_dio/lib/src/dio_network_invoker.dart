@@ -96,7 +96,7 @@ final class DioNetworkInvoker implements INetworkInvoker {
           return ErrorResponseResult.noResponse(
             error: NetworkErrorInvalidPayload(
               message:
-                  'Invalid payload type. Payload must be Map<String, dynamic> '
+              'Invalid payload type. Payload must be Map<String, dynamic> '
                   'when payloadType is RequestPayloadType.formData.',
               stackTrace: StackTrace.current,
             ),
@@ -213,48 +213,40 @@ final class DioNetworkInvoker implements INetworkInvoker {
       );
     }
 
-    // parse response data
-    late final dynamic dataDynamic;
-    final sampleModel = request.sampleModel;
-    if (sampleModel is JsonResponseModel) {
-      try {
-        final json = jsonDecode(responseData);
-        dataDynamic = sampleModel.fromJson(json);
-      } on FormatException catch (e, s) {
-        return ErrorResponseResult.withResponse(
-          statusCode: statusCode,
-          error: NetworkErrorInvalidResponseType(
-            message: 'Failed to parse response',
-            error: e,
-            stackTrace: s,
-          ),
-        );
-      }
-    } else if (sampleModel is CustomResponseModel) {
-      dataDynamic = sampleModel.fromString(responseData);
-    } else {
-      return ErrorResponseResult.withResponse(
-        statusCode: statusCode,
-        error: NetworkErrorInvalidResponseType(
-          message: 'Invalid response model type: ${sampleModel.runtimeType}',
-          stackTrace: StackTrace.current,
-        ),
-      );
-    }
-
-    // return success response
-    late final T data;
     try {
-      data = dataDynamic as T;
-      return SuccessResponseResult(
-        data: data,
-        statusCode: statusCode,
+      return request.responseFactory.when<ResponseResult<T>>(
+        json: (JsonResponseFactory<T> f) {
+          try {
+            final json = jsonDecode(responseData);
+            final data = f.fromJson(json);
+            return SuccessResponseResult(
+              data: data,
+              statusCode: statusCode,
+            );
+          } on FormatException catch (e, s) {
+            return ErrorResponseResult.withResponse(
+              statusCode: statusCode,
+              error: NetworkErrorInvalidResponseType(
+                message: 'Failed to parse response',
+                error: e,
+                stackTrace: s,
+              ),
+            );
+          }
+        },
+        custom: (CustomResponseFactory<T> f) {
+          final data = f.fromString(responseData);
+          return SuccessResponseResult(
+            data: data,
+            statusCode: statusCode,
+          );
+        },
       );
     } on Exception catch (e, s) {
       return ErrorResponseResult.withResponse(
         statusCode: statusCode,
         error: NetworkErrorInvalidResponseType(
-          message: 'Failed to cast response',
+          message: 'Failed to process response',
           error: e,
           stackTrace: s,
         ),

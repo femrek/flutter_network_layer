@@ -7,5 +7,5 @@ class RequestTestNotFound extends RequestCommand<ResponseEmpty> {
   String get path => '/not-found';
 
   @override
-  ResponseEmpty get sampleModel => const ResponseEmpty();
+  final ResponseFactory<ResponseEmpty> responseFactory = ResponseEmptyFactory();
 }

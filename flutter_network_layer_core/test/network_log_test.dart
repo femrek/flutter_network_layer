@@ -72,7 +72,7 @@ void main() {
       test('test 1', () {
         final log = NetworkLogSuccessResponse(
           statusCode: 200,
-          data: const ResponseTest1(field1: 'value1'),
+          data: ResponseTest1(field1: 'value1'),
         );
 
         expect(

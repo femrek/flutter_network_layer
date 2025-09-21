@@ -27,7 +27,7 @@ abstract final class AppNetworkManager {
   }
 }
 
-final class ResponseUser extends JsonResponseModel {
+final class ResponseUser extends ResponseModel {
   const ResponseUser({
     required this.id,
     required this.name,
@@ -40,6 +40,24 @@ final class ResponseUser extends JsonResponseModel {
   final int id;
   final String name;
 
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+    };
+  }
+
+  @override
+  String toString() => toJson().toString();
+}
+
+final class ResponseUserFactory extends JsonResponseFactory<ResponseUser> {
+  factory ResponseUserFactory() => _instance;
+
+  const ResponseUserFactory._internal();
+
+  static const ResponseUserFactory _instance = ResponseUserFactory._internal();
+
   @override
   ResponseUser fromJson(dynamic json) {
     assert(json is Map<String, dynamic>, 'json is not a Map<String, dynamic>');
@@ -50,17 +68,6 @@ final class ResponseUser extends JsonResponseModel {
       name: map['name'] as String,
     );
   }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-    };
-  }
-
-  @override
-  String toString() => toJson().toString();
 }
 
 final class RequestUser extends RequestCommand<ResponseUser> {
@@ -74,5 +81,5 @@ final class RequestUser extends RequestCommand<ResponseUser> {
   String get path => '/users/$id';
 
   @override
-  ResponseUser get sampleModel => const ResponseUser.empty();
+  final ResponseFactory<ResponseUser> responseFactory = ResponseUserFactory();
 }

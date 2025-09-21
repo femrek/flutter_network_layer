@@ -8,5 +8,6 @@ class RequestTestUser extends RequestCommand<ResponseTestUser> {
   String get path => TestPaths.testUser;
 
   @override
-  ResponseTestUser get sampleModel => const ResponseTestUser.empty();
+  final ResponseFactory<ResponseTestUser> responseFactory =
+      ResponseTestUserFactory();
 }

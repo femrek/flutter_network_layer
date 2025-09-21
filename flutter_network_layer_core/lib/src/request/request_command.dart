@@ -13,8 +13,8 @@ abstract class RequestCommand<T extends ResponseModel> {
   /// The path of the request.
   String get path;
 
-  /// The sample model to deserialize the response via its fromJson function.
-  T get sampleModel;
+  /// The factory instance to deserialize the response.
+  ResponseFactory<T> get responseFactory;
 
   /// The method of the request. GET, POST, PUT, DELETE, etc.
   HttpRequestMethod get method => HttpRequestMethod.get;

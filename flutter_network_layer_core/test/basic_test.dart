@@ -88,22 +88,16 @@ class _SampleNetworkInvoker implements INetworkInvoker {
 
     final body = response.body;
 
-    final sampleModel = request.sampleModel;
-    if (sampleModel is CustomResponseModel) {
-      final model = sampleModel.fromString(body) as T;
-      return SuccessResponseResult(data: model, statusCode: 200);
-    } else if (sampleModel is JsonResponseModel) {
-      final json = jsonDecode(body);
-      final model = sampleModel.fromJson(json) as T;
-      return SuccessResponseResult(data: model, statusCode: 200);
-    } else {
-      return ErrorResponseResult.withResponse(
-        statusCode: response.statusCode,
-        error: NetworkErrorInvalidResponseType(
-          message: 'Error: Invalid response model',
-          stackTrace: StackTrace.current,
-        ),
-      );
-    }
+    return request.responseFactory.when<ResponseResult<T>>(
+      json: (JsonResponseFactory<T> json) {
+        final jsonData = jsonDecode(body);
+        final model = json.fromJson(jsonData);
+        return SuccessResponseResult(data: model, statusCode: 200);
+      },
+      custom: (CustomResponseFactory<T> custom) {
+        final model = custom.fromString(body);
+        return SuccessResponseResult(data: model, statusCode: 200);
+      },
+    );
   }
 }
