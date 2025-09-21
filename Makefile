@@ -9,3 +9,12 @@ generate_changelogs:
 	python3 ./scripts/change_log_inserter.py temp_change_log $(VERSION) flutter_network_layer_core/CHANGELOG.md
 	python3 ./scripts/change_log_inserter.py temp_change_log $(VERSION) flutter_network_layer_dio/CHANGELOG.md
 	rm temp_change_log
+
+publish:
+	@for package in $(PACKAGES); do \
+		echo "Publishing $$package..."; \
+		cd $$package; \
+		dart pub publish --force; \
+		cd -; \
+	done
+
