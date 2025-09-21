@@ -1,3 +1,17 @@
+## 0.6.0
+
+### 🚀 Features
+
+- Feat: Create ResponseModelFactory and subclasses to reduce
+  ResponseModel. No more sample response model.
+
+* Remove JsonResponseModel and CustomResponseModel classes.
+  ResponseModes can be extended directly.
+* Create abstract classes 'JsonResponseFactory' and
+  'CustomResponseFactory' to extend for each response model.
+* Update RequestCommand with 'responsefactory' field instead of
+  'sampleModel'.
+
 ## 0.5.1
 
 ### 📚 Documentation
@@ -12,8 +26,6 @@
 
 - Example flutter dio app updated to new version of the packages.
 
-
-
 ### 🚜 Refactor
 
 - Init monorepo
@@ -21,8 +33,6 @@
 - Update request payload handling and enum definitions
 
 - Enhance error handling and logging in network invoker.
-
-
 
 ### 🧪 Testing
 
