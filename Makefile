@@ -16,10 +16,10 @@ check_pub_publish:
 		echo "Running pubspec version update for $$pkg..."; \
 		python3 scripts/pubspec_version_updater.py $$pkg/pubspec.yaml $(VERSION_PURE); \
     done
-	@git tag $(VERSION)
 	@git cliff -o CHANGELOG.md
 	@git add .
 	@git commit --amend --no-edit
+	@git tag $(VERSION)
 	@git push origin main
 	@git push origin tag $(VERSION)
 
