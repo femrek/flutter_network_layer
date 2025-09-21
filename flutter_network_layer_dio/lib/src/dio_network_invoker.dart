@@ -96,7 +96,7 @@ final class DioNetworkInvoker implements INetworkInvoker {
           return ErrorResponseResult.noResponse(
             error: NetworkErrorInvalidPayload(
               message:
-              'Invalid payload type. Payload must be Map<String, dynamic> '
+                  'Invalid payload type. Payload must be Map<String, dynamic> '
                   'when payloadType is RequestPayloadType.formData.',
               stackTrace: StackTrace.current,
             ),
