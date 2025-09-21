@@ -5,13 +5,13 @@ PACKAGES := flutter_network_layer_core flutter_network_layer_dio
 pre_version_commit:
 	@git add pubspec.yaml
 	@git commit -m "chore: ready for version $(VERSION)"
-
-check_pub_publish:
 	@echo "Checking if 'pub publish' can be run..."
 	@for pkg in $(PACKAGES); do \
 		echo "Running dry-run for $$pkg..."; \
 		cd $$pkg && dart pub publish --dry-run && cd ..; \
 	done
+
+publish:
 	@for pkg in $(PACKAGES); do \
 		echo "Running pubspec version update for $$pkg..."; \
 		python3 scripts/pubspec_version_updater.py $$pkg/pubspec.yaml $(VERSION_PURE); \
