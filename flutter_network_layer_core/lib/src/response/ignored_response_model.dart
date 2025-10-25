@@ -11,6 +11,14 @@ class IgnoredResponseModel extends ResponseModel {}
 /// A response factory that creates an instance of [IgnoredResponseModel]
 class IgnoredResponseModelFactory
     extends CustomResponseFactory<IgnoredResponseModel> {
+  /// Singleton instance of [IgnoredResponseModelFactory].
+  factory IgnoredResponseModelFactory() => _instance;
+
+  const IgnoredResponseModelFactory._();
+
+  static const IgnoredResponseModelFactory _instance =
+      IgnoredResponseModelFactory._();
+
   @override
   IgnoredResponseModel fromString(String plainString) {
     return IgnoredResponseModel();
