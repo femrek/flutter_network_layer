@@ -1,3 +1,12 @@
+## 0.7.1 - 2025-10-25
+
+
+
+### 🚜 Refactor
+
+- Refactor: Implement the singleton pattern for IgnoredResponseModelFactory
+
+
 ## 0.7.0 - 2025-10-25
 
 

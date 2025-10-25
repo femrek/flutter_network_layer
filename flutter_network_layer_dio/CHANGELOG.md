@@ -1,3 +1,9 @@
+## 0.7.1
+
+### 🚜 Refactor
+
+- Refactor: Implement the singleton pattern for IgnoredResponseModelFactory
+
 ## 0.7.0
 
 ### 🚀 Features
