@@ -41,14 +41,14 @@ abstract class RequestCommand<T extends ResponseModel> {
   /// string.
   ///
   /// The default implementation returns a string that contains the method,
-  /// path, payload type, headers, and data.
+  /// path and payload type.
   ///
   /// The log helper of the package uses this method to log the request data.
   /// So, if you want to customize the log string, you can override this method.
+  ///
+  /// Used in [NetworkLogRequest.message] function.
   String toLogString() {
     return '$runtimeType ${method.value} $path '
-        'Payload Type: $payloadType '
-        'Headers: $headers '
-        'Data: $payload';
+        'Payload Type: $payloadType ';
   }
 }

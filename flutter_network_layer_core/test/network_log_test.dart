@@ -127,18 +127,6 @@ void main() {
 
         expect(
           log.message,
-          contains('field1'),
-          reason: 'log message should contain request payload',
-        );
-
-        expect(
-          log.message,
-          contains('value1'),
-          reason: 'log message should contain request payload',
-        );
-
-        expect(
-          log.message,
           contains('GET'),
           reason: 'log message should contain request method',
         );

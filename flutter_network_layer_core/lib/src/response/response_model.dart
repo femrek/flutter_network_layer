@@ -14,6 +14,8 @@ abstract class ResponseModel {
   ///
   /// By default, it returns the runtime type of the instance. But for better
   /// logging, it is recommended to override this method in subclasses.
+  ///
+  /// Used in [NetworkLogSuccessResponse.message] function.
   String toLogString() {
     return '$runtimeType';
   }
