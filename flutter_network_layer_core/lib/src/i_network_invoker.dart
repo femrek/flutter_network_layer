@@ -7,8 +7,9 @@ abstract interface class INetworkInvoker {
   Future<void> init(String baseUrl);
 
   /// Performs a request and returns the response.
-  Future<ResponseResult<T>> request<T extends ResponseModel>(
-      RequestCommand<T> request);
+  Future<ResponseResult<T, E>>
+      request<T extends ResponseModel, E extends ResponseModel>(
+          RequestCommand<T, E> request);
 
   /// The callback function to trigger when a log is received from this
   /// network invoker.

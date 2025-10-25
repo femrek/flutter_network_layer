@@ -4,6 +4,7 @@ export 'src/error/network_error.dart';
 export 'src/i_network_invoker.dart';
 export 'src/logging/network_log.dart';
 export 'src/request/request_command.dart';
+export 'src/response/ignored_response_model.dart';
 export 'src/response/response_factory.dart';
 export 'src/response/response_model.dart';
 export 'src/response/response_result.dart';

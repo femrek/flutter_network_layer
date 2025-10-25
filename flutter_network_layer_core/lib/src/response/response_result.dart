@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:flutter_network_layer_core/flutter_network_layer_core.dart';
 
-/// The standard response result of a request.
-sealed class ResponseResult<T extends ResponseModel> {
+/// The standard response result of a request. [T] is the type of the success
+/// response model and [E] is the type of the error response model.
+sealed class ResponseResult<T extends ResponseModel, E extends ResponseModel> {
   /// The payload of the response.
   int? get statusCode;
 
@@ -12,16 +13,16 @@ sealed class ResponseResult<T extends ResponseModel> {
 
   /// Get the instance as [SuccessResponseResult] only if it is a success.
   /// Otherwise, it will throw an exception.
-  SuccessResponseResult<T> get asSuccess {
+  SuccessResponseResult<T, E> get asSuccess {
     assert(isSuccess, 'The response is not a success response.');
-    return this as SuccessResponseResult<T>;
+    return this as SuccessResponseResult<T, E>;
   }
 
   /// If the instance is an error response, otherwise it will throw an
   /// exception.
-  ErrorResponseResult<T> get asError {
+  ErrorResponseResult<T, E> get asError {
     assert(!isSuccess, 'The response is not an error response.');
-    return this as ErrorResponseResult<T>;
+    return this as ErrorResponseResult<T, E>;
   }
 
   /// Executes the given function based on the type of the response.
@@ -33,9 +34,9 @@ sealed class ResponseResult<T extends ResponseModel> {
   /// success functions.
   ///
   /// See also [whenAsync].
-  E when<E>({
-    required E Function(SuccessResponseResult<T> response) success,
-    required E Function(ErrorResponseResult<T> response) error,
+  R when<R>({
+    required R Function(SuccessResponseResult<T, E> response) success,
+    required R Function(ErrorResponseResult<T, E> response) error,
   }) {
     if (isSuccess) {
       return success(asSuccess);
@@ -54,9 +55,9 @@ sealed class ResponseResult<T extends ResponseModel> {
   ///
   /// This is an asynchronous version of [when]. Allows to execute an async
   /// process and wait for the result.
-  Future<E> whenAsync<E>({
-    required FutureOr<E> Function(SuccessResponseResult<T> response) success,
-    required FutureOr<E> Function(ErrorResponseResult<T> response) error,
+  Future<R> whenAsync<R>({
+    required FutureOr<R> Function(SuccessResponseResult<T, E> response) success,
+    required FutureOr<R> Function(ErrorResponseResult<T, E> response) error,
   }) async {
     if (isSuccess) {
       return await success(asSuccess);
@@ -67,8 +68,8 @@ sealed class ResponseResult<T extends ResponseModel> {
 }
 
 /// The standard response result of a request.
-final class SuccessResponseResult<T extends ResponseModel>
-    extends ResponseResult<T> {
+final class SuccessResponseResult<T extends ResponseModel,
+    E extends ResponseModel> extends ResponseResult<T, E> {
   /// Creates a success response result.
   ///
   /// [data] is the payload of the response. It must be an [ResponseModel] and
@@ -91,8 +92,8 @@ final class SuccessResponseResult<T extends ResponseModel>
 }
 
 /// The error response result of a request.
-final class ErrorResponseResult<T extends ResponseModel>
-    extends ResponseResult<T> {
+final class ErrorResponseResult<T extends ResponseModel,
+    E extends ResponseModel> extends ResponseResult<T, E> {
   /// Creates an error response result, if a response is received from the
   /// server.
   ///
@@ -100,6 +101,7 @@ final class ErrorResponseResult<T extends ResponseModel>
   /// status code of the response. It must not be null for server errors.
   ErrorResponseResult.withResponse({
     required this.error,
+    required this.errorResponse,
     required int this.statusCode,
   });
 
@@ -109,7 +111,11 @@ final class ErrorResponseResult<T extends ResponseModel>
   /// [message] is the error message. It must not be null.
   ErrorResponseResult.noResponse({
     required this.error,
-  }) : statusCode = null;
+  })  : statusCode = null,
+        errorResponse = null;
+
+  /// The error response payload of the response, if any.
+  final E? errorResponse;
 
   /// The error message of the response.
   String get message => error.message;

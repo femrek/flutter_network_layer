@@ -50,8 +50,9 @@ final class DioNetworkInvoker implements INetworkInvoker {
   }
 
   @override
-  Future<ResponseResult<T>> request<T extends ResponseModel>(
-      RequestCommand<T> request) async {
+  Future<ResponseResult<T, E>>
+      request<T extends ResponseModel, E extends ResponseModel>(
+          RequestCommand<T, E> request) async {
     onLog(NetworkLogTrace.start(
       message: '${request.method.value} ${request.path}',
     ));
@@ -79,8 +80,9 @@ final class DioNetworkInvoker implements INetworkInvoker {
     return result;
   }
 
-  Future<ResponseResult<T>> _request<T extends ResponseModel>(
-      RequestCommand<T> request) async {
+  Future<ResponseResult<T, E>>
+      _request<T extends ResponseModel, E extends ResponseModel>(
+          RequestCommand<T, E> request) async {
     final requestPayload = request.payload;
 
     final Response<dynamic> response;
@@ -152,6 +154,8 @@ final class DioNetworkInvoker implements INetworkInvoker {
 
       return ErrorResponseResult.withResponse(
         statusCode: statusCode,
+        errorResponse:
+            _extractErrorResponse<T, E>(response.data.toString(), request),
         error: NetworkErrorResponse(
           statusCode: statusCode,
           message: response.data.toString(),
@@ -183,6 +187,7 @@ final class DioNetworkInvoker implements INetworkInvoker {
     if (responseData == null) {
       return ErrorResponseResult.withResponse(
         statusCode: statusCode,
+        errorResponse: null,
         error: NetworkError(
           message: 'Response data is null',
           stackTrace: StackTrace.current,
@@ -192,6 +197,7 @@ final class DioNetworkInvoker implements INetworkInvoker {
     if (responseData is! String) {
       return ErrorResponseResult.withResponse(
         statusCode: statusCode,
+        errorResponse: null,
         error: NetworkErrorInvalidResponseType(
           message: 'Invalid response type. Response data is not String. '
               'Response type: ${responseData.runtimeType} '
@@ -203,6 +209,7 @@ final class DioNetworkInvoker implements INetworkInvoker {
     if (statusCode < 200 || statusCode >= 300) {
       return ErrorResponseResult.withResponse(
         statusCode: statusCode,
+        errorResponse: _extractErrorResponse<T, E>(responseData, request),
         error: NetworkErrorResponse(
           statusCode: statusCode,
           message: 'Response status is not successful. '
@@ -214,7 +221,7 @@ final class DioNetworkInvoker implements INetworkInvoker {
     }
 
     try {
-      return request.responseFactory.when<ResponseResult<T>>(
+      return request.responseFactory.when<ResponseResult<T, E>>(
         json: (JsonResponseFactory<T> f) {
           try {
             final json = jsonDecode(responseData);
@@ -226,6 +233,7 @@ final class DioNetworkInvoker implements INetworkInvoker {
           } on FormatException catch (e, s) {
             return ErrorResponseResult.withResponse(
               statusCode: statusCode,
+              errorResponse: _extractErrorResponse(responseData, request),
               error: NetworkErrorInvalidResponseType(
                 message: 'Failed to parse response',
                 error: e,
@@ -245,6 +253,7 @@ final class DioNetworkInvoker implements INetworkInvoker {
     } on Exception catch (e, s) {
       return ErrorResponseResult.withResponse(
         statusCode: statusCode,
+        errorResponse: _extractErrorResponse<T, E>(responseData, request),
         error: NetworkErrorInvalidResponseType(
           message: 'Failed to process response',
           error: e,
@@ -252,5 +261,42 @@ final class DioNetworkInvoker implements INetworkInvoker {
         ),
       );
     }
+  }
+
+  E? _extractErrorResponse<T extends ResponseModel, E extends ResponseModel>(
+      String responseData, RequestCommand<T, E> request) {
+    return request.errorResponseFactory.when<E?>(
+      json: (JsonResponseFactory<E> factory) {
+        try {
+          final jsonData = jsonDecode(responseData);
+          final model = factory.fromJson(jsonData);
+          return model;
+        } on Exception catch (e, s) {
+          onLog(NetworkLogError(
+            error: NetworkErrorInvalidResponseType(
+              message: 'Failed to parse error response',
+              error: e,
+              stackTrace: s,
+            ),
+          ));
+          return null;
+        }
+      },
+      custom: (CustomResponseFactory<E> custom) {
+        try {
+          final model = custom.fromString(responseData);
+          return model;
+        } on Exception catch (e, s) {
+          onLog(NetworkLogError(
+            error: NetworkErrorInvalidResponseType(
+              message: 'Failed to parse error response',
+              error: e,
+              stackTrace: s,
+            ),
+          ));
+          return null;
+        }
+      },
+    );
   }
 }

@@ -70,7 +70,8 @@ final class ResponseUserFactory extends JsonResponseFactory<ResponseUser> {
   }
 }
 
-final class RequestUser extends RequestCommand<ResponseUser> {
+final class RequestUser
+    extends RequestCommand<ResponseUser, IgnoredResponseModel> {
   RequestUser({
     required this.id,
   });
@@ -82,4 +83,8 @@ final class RequestUser extends RequestCommand<ResponseUser> {
 
   @override
   final ResponseFactory<ResponseUser> responseFactory = ResponseUserFactory();
+
+  @override
+  final ResponseFactory<IgnoredResponseModel> errorResponseFactory =
+      IgnoredResponseModelFactory();
 }

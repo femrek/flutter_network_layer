@@ -29,3 +29,39 @@ class ResponseTest1Factory extends JsonResponseFactory<ResponseTest1> {
     );
   }
 }
+
+final class ResponseTestError extends ResponseModel {
+  ResponseTestError({
+    this.message,
+    this.errorField,
+  });
+
+  final String? message;
+  final String? errorField;
+
+  @override
+  String toLogString() {
+    return 'ResponseTestError(message: $message, errorField: $errorField)';
+  }
+}
+
+final class ResponseTestErrorFactory
+    extends JsonResponseFactory<ResponseTestError> {
+  factory ResponseTestErrorFactory() => _instance;
+
+  ResponseTestErrorFactory._internal();
+
+  static final ResponseTestErrorFactory _instance =
+      ResponseTestErrorFactory._internal();
+
+  @override
+  ResponseTestError fromJson(dynamic json) {
+    if (json is! Map<String, dynamic>) {
+      throw Exception('Invalid JSON: $json');
+    }
+    return ResponseTestError(
+      message: json['message'] as String?,
+      errorField: json['errorField'] as String?,
+    );
+  }
+}

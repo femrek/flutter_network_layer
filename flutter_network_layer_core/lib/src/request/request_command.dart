@@ -9,12 +9,19 @@ typedef OnProgressCallback = void Function(int done, int total);
 /// An implementation should provide the necessary information about the request
 /// such as the path, method, payload type, payload data, headers, progress
 /// callbacks, etc.
-abstract class RequestCommand<T extends ResponseModel> {
+///
+/// [T] is the type of the successful response model. [E] is the type of the
+/// error response model.
+abstract class RequestCommand<T extends ResponseModel,
+    E extends ResponseModel> {
   /// The path of the request.
   String get path;
 
   /// The factory instance to deserialize the response.
   ResponseFactory<T> get responseFactory;
+
+  /// The factory instance to deserialize the error response.
+  ResponseFactory<E> get errorResponseFactory;
 
   /// The method of the request. GET, POST, PUT, DELETE, etc.
   HttpRequestMethod get method => HttpRequestMethod.get;

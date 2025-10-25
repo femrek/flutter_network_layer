@@ -23,11 +23,12 @@ class NetworkManager implements INetworkInvoker {
   Future<void> init(String baseUrl) async {}
 
   @override
-  Future<ResponseResult<T>> request<T extends ResponseModel>(
-      RequestCommand<T> request) async {
+  Future<ResponseResult<T, E>>
+      request<T extends ResponseModel, E extends ResponseModel>(
+          RequestCommand<T, E> request) async {
     final dummyResponseJson = <String, dynamic>{'message': 'Hello, World!'};
 
-    return request.responseFactory.when<ResponseResult<T>>(
+    return request.responseFactory.when<ResponseResult<T, E>>(
       json: (JsonResponseFactory<T> json) {
         final dummyResponse = json.fromJson(dummyResponseJson);
         return SuccessResponseResult(
@@ -54,7 +55,8 @@ class NetworkManager implements INetworkInvoker {
   }
 }
 
-class RequestExample implements RequestCommand<ResponseExample> {
+class RequestExample
+    implements RequestCommand<ResponseExample, IgnoredResponseModel> {
   @override
   Map<String, dynamic> get payload => const {};
 
@@ -79,6 +81,10 @@ class RequestExample implements RequestCommand<ResponseExample> {
   @override
   final ResponseFactory<ResponseExample> responseFactory =
       ResponseExampleFactory();
+
+  @override
+  final ResponseFactory<IgnoredResponseModel> errorResponseFactory =
+      IgnoredResponseModelFactory();
 
   @override
   String toString() {
