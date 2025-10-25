@@ -1,4 +1,22 @@
-## 0.6.0 - 2025-09-21
+## 0.7.0 - 2025-10-25
+
+
+
+### 🚀 Features
+
+- Feat: Allows handling error response bodies.
+
+- ResponseResult and RequestCommand have one more generic type representing the error response type.
+- Create IgnoredResponseModel as a ResponseModel implementation provided by the core library. Useful when the response payload is not relevant.
+
+
+
+### 🚜 Refactor
+
+- Refactor: remove payload and headers from RequestCommand.toLogString() method. It can be still overridden by the subclass.
+
+
+## 6.0.0 - 2025-09-21
 
 
 
