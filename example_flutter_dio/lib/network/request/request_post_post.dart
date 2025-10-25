@@ -21,7 +21,7 @@ final class RequestPostPost extends RequestCommand<ResponsePost> {
   final String body;
 
   @override
-  Map<String, dynamic> get data => {
+  Map<String, dynamic> get payload => {
         'userId': userId,
         'title': title,
         'body': body,
