@@ -25,7 +25,7 @@
 - Refactor: remove payload and headers from RequestCommand.toLogString() method. It can be still overridden by the subclass.
 
 
-## 6.0.0 - 2025-09-21
+## 0.6.0 - 2025-09-21
 
 
 
