@@ -20,7 +20,7 @@ void main() {
     //
     // Accepts a flexible payload to test how the client drops nulls or omits fields.
     //
-    //Future<Map<String, Object>> patchRecord(String id, Object body) async
+    //Future<Map<String, Object?>> patchRecord(String id, Object body) async
     test('test patchRecord', () async {
       // TODO
     });

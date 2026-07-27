@@ -220,4 +220,3 @@ class WidgetPaginationResponseDataInnerFactory extends JsonSchemaFactory<WidgetP
   @override
   WidgetPaginationResponseDataInner fromJson(dynamic json) => WidgetPaginationResponseDataInner.fromJson(json)!;
 }
-

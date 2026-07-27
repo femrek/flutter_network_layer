@@ -25,7 +25,7 @@ import 'package:openapi/api.dart';
 
 final api_instance = TablesUpdateTableApi();
 final id = 1; // int | Unique identifier of the entity to update
-final requestBody = Map<String, Object>(); // Map<String, Object> | 
+final requestBody = Map<String, Object?>(); // Map<String, Object?> | 
 
 try {
     final result = api_instance.updateTable(id, requestBody);
@@ -40,7 +40,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **int**| Unique identifier of the entity to update | 
- **requestBody** | [**Map<String, Object>**](Object.md)|  | 
+ **requestBody** | [**Map<String, Object?>**](Object.md)|  | 
 
 ### Return type
 

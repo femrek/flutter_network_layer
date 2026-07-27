@@ -20,7 +20,7 @@ void main() {
     //
     // Updates multiple entities with the same field values in a single operation. Implements ra-spring-data-provider's updateMany operation for bulk updates. Returns a list of updated entity IDs. 
     //
-    //Future<List<int>> updateManyTables(Map<String, Object> requestBody, { List<int> id }) async
+    //Future<List<int>> updateManyTables(Map<String, Object?> requestBody, { List<int> id }) async
     test('test updateManyTables', () async {
       // TODO
     });

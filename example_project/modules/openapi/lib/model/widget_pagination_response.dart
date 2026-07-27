@@ -167,4 +167,3 @@ class WidgetPaginationResponseFactory extends JsonSchemaFactory<WidgetPagination
   @override
   WidgetPaginationResponse fromJson(dynamic json) => WidgetPaginationResponse.fromJson(json)!;
 }
-

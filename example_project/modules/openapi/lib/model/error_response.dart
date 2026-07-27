@@ -144,4 +144,3 @@ class ErrorResponseFactory extends JsonSchemaFactory<ErrorResponse> {
   @override
   ErrorResponse fromJson(dynamic json) => ErrorResponse.fromJson(json)!;
 }
-

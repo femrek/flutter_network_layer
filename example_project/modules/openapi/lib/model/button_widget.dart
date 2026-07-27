@@ -185,4 +185,3 @@ class ButtonWidgetFactory extends JsonSchemaFactory<ButtonWidget> {
   @override
   ButtonWidget fromJson(dynamic json) => ButtonWidget.fromJson(json)!;
 }
-

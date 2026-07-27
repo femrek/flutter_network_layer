@@ -13,7 +13,7 @@ Method | HTTP request | Description
 
 
 # **patchRecord**
-> Map<String, Object> patchRecord(id, body)
+> Map<String, Object?> patchRecord(id, body)
 
 Partial Update (PATCH)
 
@@ -44,7 +44,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**Map<String, Object>**](Object.md)
+**Map<String, Object?>**
 
 ### Authorization
 

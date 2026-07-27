@@ -150,4 +150,3 @@ class WidgetFactory extends JsonSchemaFactory<Widget> {
   @override
   Widget fromJson(dynamic json) => Widget.fromJson(json)!;
 }
-

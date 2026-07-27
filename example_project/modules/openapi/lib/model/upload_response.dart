@@ -144,4 +144,3 @@ class UploadResponseFactory extends JsonSchemaFactory<UploadResponse> {
   @override
   UploadResponse fromJson(dynamic json) => UploadResponse.fromJson(json)!;
 }
-

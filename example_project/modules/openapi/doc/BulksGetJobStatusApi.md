@@ -13,7 +13,7 @@ Method | HTTP request | Description
 
 
 # **getJobStatus**
-> Map<String, Object> getJobStatus(jobId, level)
+> Map<String, Object?> getJobStatus(jobId, level)
 
 Get Job Status
 
@@ -44,7 +44,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**Map<String, Object>**](Object.md)
+**Map<String, Object?>**
 
 ### Authorization
 

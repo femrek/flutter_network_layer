@@ -21,12 +21,17 @@ class _BulkButtons extends StatelessWidget {
           ),
         ),
         _RequestButton(
-          label: 'Bulk Upload',
+          label: 'Bulk Upload (Image)',
           icon: Icons.upload,
           onPressed: () async {
             final dir = await getApplicationCacheDirectory();
             final filePath = '${dir.path}/hn_ss.jpg';
             final file = File(filePath);
+            if (!file.existsSync()) {
+              Logger(
+                '_BulkButtons',
+              ).severe('File not found. download the image first');
+            }
             await invoker.send(
               BulkUploadCommand(
                 file: FileMultipartFileSchema(

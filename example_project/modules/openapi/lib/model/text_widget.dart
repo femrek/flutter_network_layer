@@ -185,4 +185,3 @@ class TextWidgetFactory extends JsonSchemaFactory<TextWidget> {
   @override
   TextWidget fromJson(dynamic json) => TextWidget.fromJson(json)!;
 }
-

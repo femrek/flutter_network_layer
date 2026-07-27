@@ -133,4 +133,3 @@ class CategoryNodeFactory extends JsonSchemaFactory<CategoryNode> {
   @override
   CategoryNode fromJson(dynamic json) => CategoryNode.fromJson(json)!;
 }
-

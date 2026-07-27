@@ -20,7 +20,7 @@ void main() {
     //
     // Retrieves the status of a bulk job. Tests untyped maps and Enum parameters.
     //
-    //Future<Map<String, Object>> getJobStatus(String jobId, { String level }) async
+    //Future<Map<String, Object?>> getJobStatus(String jobId, { String level }) async
     test('test getJobStatus', () async {
       // TODO
     });

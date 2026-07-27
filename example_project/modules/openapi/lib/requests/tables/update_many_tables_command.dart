@@ -17,7 +17,7 @@ import '../../base/base_request.dart';
 class UpdateManyTablesRequestSchema extends JsonRequestSchema {
   const UpdateManyTablesRequestSchema({required this.data});
 
-  final Map<String, Object> data;
+  final Map<String, Object?> data;
 
   @override
   dynamic toJsonPayload() => data;
@@ -30,7 +30,7 @@ class UpdateManyTablesRequestSchema extends JsonRequestSchema {
 class UpdateManyTablesCommand extends OpenapiDefinitionBaseRequest<AnyDataSchema> {
   UpdateManyTablesCommand({
     this.id,
-    required Map<String, Object> requestBody,
+    required Map<String, Object?> requestBody,
   }) : _payload = UpdateManyTablesRequestSchema(data: requestBody);
 
   /// List of entity IDs to update

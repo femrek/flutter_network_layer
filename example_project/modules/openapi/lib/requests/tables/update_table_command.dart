@@ -18,7 +18,7 @@ import '../../model/table_dto.dart';
 class UpdateTableRequestSchema extends JsonRequestSchema {
   const UpdateTableRequestSchema({required this.data});
 
-  final Map<String, Object> data;
+  final Map<String, Object?> data;
 
   @override
   dynamic toJsonPayload() => data;
@@ -31,7 +31,7 @@ class UpdateTableRequestSchema extends JsonRequestSchema {
 class UpdateTableCommand extends OpenapiDefinitionBaseRequest<TableDTO> {
   UpdateTableCommand({
     required this.id,
-    required Map<String, Object> requestBody,
+    required Map<String, Object?> requestBody,
   }) : _payload = UpdateTableRequestSchema(data: requestBody);
 
   /// Unique identifier of the entity to update

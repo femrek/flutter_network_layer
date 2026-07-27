@@ -144,4 +144,3 @@ class UploadMetadataFactory extends JsonSchemaFactory<UploadMetadata> {
   @override
   UploadMetadata fromJson(dynamic json) => UploadMetadata.fromJson(json)!;
 }
-

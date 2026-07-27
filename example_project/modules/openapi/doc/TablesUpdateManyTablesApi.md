@@ -24,7 +24,7 @@ Updates multiple entities with the same field values in a single operation. Impl
 import 'package:openapi/api.dart';
 
 final api_instance = TablesUpdateManyTablesApi();
-final requestBody = Map<String, Object>(); // Map<String, Object> | 
+final requestBody = Map<String, Object?>(); // Map<String, Object?> | 
 final id = [[1,2,3]]; // List<int> | List of entity IDs to update
 
 try {
@@ -39,7 +39,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **requestBody** | [**Map<String, Object>**](Object.md)|  | 
+ **requestBody** | [**Map<String, Object?>**](Object.md)|  | 
  **id** | [**List<int>**](int.md)| List of entity IDs to update | [optional] [default to const []]
 
 ### Return type

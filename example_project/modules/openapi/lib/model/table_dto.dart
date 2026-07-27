@@ -176,4 +176,3 @@ class TableDTOFactory extends JsonSchemaFactory<TableDTO> {
   @override
   TableDTO fromJson(dynamic json) => TableDTO.fromJson(json)!;
 }
-

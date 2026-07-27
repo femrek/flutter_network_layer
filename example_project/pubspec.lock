@@ -159,14 +159,14 @@ packages:
       path: "../dart_network_layer_core"
       relative: true
     source: path
-    version: "1.0.0-dev.12"
+    version: "1.0.0-rc.13"
   dart_network_layer_dio:
     dependency: "direct main"
     description:
       path: "../dart_network_layer_dio"
       relative: true
     source: path
-    version: "1.0.0-dev.12"
+    version: "1.0.0-rc.13"
   dart_style:
     dependency: transitive
     description:
