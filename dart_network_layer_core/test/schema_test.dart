@@ -183,13 +183,14 @@ void main() {
   group('HttpRequestMethod', () {
     test('values check', () {
       expect(HttpRequestMethod.get.value, equals('GET'));
+      expect(HttpRequestMethod.query.value, equals('QUERY'));
       expect(HttpRequestMethod.post.value, equals('POST'));
       expect(HttpRequestMethod.patch.value, equals('PATCH'));
       expect(HttpRequestMethod.put.value, equals('PUT'));
       expect(HttpRequestMethod.delete.value, equals('DELETE'));
       expect(HttpRequestMethod.head.value, equals('HEAD'));
 
-      expect(HttpRequestMethod.values.length, equals(6));
+      expect(HttpRequestMethod.values.length, equals(7));
     });
   });
 }

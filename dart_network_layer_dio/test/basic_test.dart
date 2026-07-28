@@ -131,6 +131,27 @@ void main() {
       expect(response, isA<SuccessResponseResult>());
       await server.close();
     });
+
+    test('QUERY request', () async {
+      final server = await TestServer.createHttpServer(events: [
+        StandardServerEvent(
+          matcher: ServerEvent.standardMatcher(
+            paths: [TestPaths.testUser],
+            method: 'QUERY',
+          ),
+          handler: (request) async =>
+              '{"id": "1", "name": "queried", "age": 20}',
+        ),
+      ]);
+
+      final networkManager = DioNetworkInvoker.fromBaseUrl(
+        'http://localhost:${server.port}',
+      );
+
+      final response = await networkManager.send(_QueryRequest());
+      expect(response, isA<SuccessResponseResult>());
+      await server.close();
+    });
   });
 }
 
@@ -170,6 +191,21 @@ class _DeleteRequest extends RequestCommand<ResponseTestUser> {
 
   @override
   HttpRequestMethod get method => HttpRequestMethod.delete;
+
+  @override
+  SchemaFactory<ResponseTestUser> get defaultResponseFactory =>
+      ResponseTestUserFactory();
+
+  @override
+  SchemaFactory get defaultErrorResponseFactory => IgnoredSchema.factory;
+}
+
+class _QueryRequest extends RequestCommand<ResponseTestUser> {
+  @override
+  String get path => TestPaths.testUser;
+
+  @override
+  HttpRequestMethod get method => HttpRequestMethod.query;
 
   @override
   SchemaFactory<ResponseTestUser> get defaultResponseFactory =>

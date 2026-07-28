@@ -3,6 +3,7 @@
 /// Enum for HTTP request methods.
 enum HttpRequestMethod {
   get('GET'),
+  query('QUERY'),
   post('POST'),
   patch('PATCH'),
   put('PUT'),
