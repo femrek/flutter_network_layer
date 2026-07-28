@@ -34,7 +34,7 @@ including OpenAPI-generated commands and custom invoker extensions.
 
 ## License
 
-MIT
+Released under the [MIT License](LICENSE).
 
 [gh_dart_network_layer_core]: https://github.com/femrek/dart_network_layer/tree/main/dart_network_layer_core
 [pd_dart_network_layer_core]: https://pub.dev/packages/dart_network_layer_core

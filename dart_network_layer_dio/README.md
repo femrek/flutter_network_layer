@@ -32,7 +32,7 @@ See [`example_project`][gh_example_flutter_dio] for end-to-end usage, including:
 
 ## License
 
-MIT
+Released under the [MIT License](LICENSE).
 
 [gh_dart_network_layer_core]: https://github.com/femrek/dart_network_layer/tree/main/dart_network_layer_core
 
