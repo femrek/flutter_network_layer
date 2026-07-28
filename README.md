@@ -2,6 +2,14 @@
 
 Multi-package network layer for Dart and Flutter projects.
 
+## Features
+
+- 🏗️ **Core Abstractions:** Defines strong network contracts (`INetworkInvoker`, `RequestCommand`) free from third-party dependencies.
+- 🚀 **Dio Implementation:** Ready-to-use Dio integration (`dart_network_layer_dio`) for production apps.
+- 📦 **File Transfers:** Built-in support for multipart file uploads and binary file downloads.
+- 🛠️ **OpenAPI Friendly:** Easily works with OpenAPI-generated request/response models.
+- 🛡️ **Type-safe Results:** Functional-style error handling via the `NetworkResult<T>` hierarchy.
+
 ## Documentation
 
 The old in-README usage guides are intentionally invalidated.

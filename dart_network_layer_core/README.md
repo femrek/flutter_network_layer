@@ -4,6 +4,13 @@
 
 Core contracts and schema abstractions for Dart Network Layer.
 
+## Features
+
+- **Decoupled Architecture:** Define your network commands entirely independent of any specific HTTP package.
+- **Functional Error Handling:** Safely map responses using the `NetworkResult<T>` hierarchy.
+- **Schema System:** Flexible `Schema` and `SchemaFactory` interfaces for data serialization and deserialization.
+- **File Support:** Abstract definitions for handling multipart uploads and binary responses.
+
 ## Guide Status
 
 The old README walkthrough has been intentionally invalidated.

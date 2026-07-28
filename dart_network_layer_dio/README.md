@@ -5,6 +5,13 @@
 Dio implementation of `INetworkInvoker` from
 [`dart_network_layer_core`][gh_dart_network_layer_core].
 
+## Features
+
+- **Production Ready:** A robust implementation of `INetworkInvoker` powered by the popular Dio package.
+- **File Transfers:** Out-of-the-box support for multipart uploads and streaming binary downloads.
+- **Interceptors:** Full access to underlying Dio functionality like interceptors for logging, auth, and more.
+- **OpenAPI Integration:** Seamlessly works with generated OpenAPI models and commands.
+
 ## Guide Status
 
 The old README usage guide is intentionally invalidated.
