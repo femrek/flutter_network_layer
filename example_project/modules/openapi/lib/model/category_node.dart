@@ -8,7 +8,15 @@
 // ignore_for_file: lines_longer_than_80_chars
 
 import 'package:dart_network_layer_core/dart_network_layer_core.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'category_node.g.dart';
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class CategoryNode extends Schema {
   /// Returns a new [CategoryNode] instance.
   CategoryNode({
@@ -16,79 +24,26 @@ class CategoryNode extends Schema {
     this.subCategories = const [],
   });
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
+  @JsonKey(name: r'categoryName')
   final String? categoryName;
 
   /// Child categories
+  @JsonKey(name: r'subCategories')
   final List<CategoryNode> subCategories;
 
   /// The factory instance for creating [CategoryNode] from JSON.
   static const factory = CategoryNodeFactory();
 
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is CategoryNode &&
-    other.categoryName == categoryName &&
-    other.subCategories == subCategories;
+  factory CategoryNode.fromJson(Map<String, dynamic> json) => _$CategoryNodeFromJson(json);
 
-  @override
-  int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (categoryName == null ? 0 : categoryName!.hashCode) +
-    (subCategories.hashCode);
-
-  @override
-  String toString() => 'CategoryNode[categoryName=$categoryName, subCategories=$subCategories]';
-
-  Map<String, dynamic> toJson() {
-    final json = <String, dynamic>{};
-    if (this.categoryName != null) {
-      json[r'categoryName'] = this.categoryName;
-    } else {
-      json[r'categoryName'] = null;
-    }
-      json[r'subCategories'] = this.subCategories;
-    return json;
-  }
-
-  /// Returns a new [CategoryNode] instance and imports its values from
-  /// [value] if it's a [Map], null otherwise.
-  // ignore: prefer_constructors_over_static_methods
-  static CategoryNode? fromJson(dynamic value) {
-    if (value is Map) {
-      final json = value.cast<String, dynamic>();
-
-      // Ensure that the map contains the required keys.
-      // Note 1: the values aren't checked for validity beyond being non-null.
-      // Note 2: this code is stripped in release mode!
-      assert(() {
-        requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "CategoryNode[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "CategoryNode[$key]" has a null value in JSON.');
-        });
-        return true;
-      }());
-
-      return CategoryNode(
-        categoryName: json[r'categoryName'] is String ? json[r'categoryName'] as String : null,
-        subCategories: CategoryNode.listFromJson(json[r'subCategories']),
-      );
-    }
-    return null;
-  }
+  Map<String, dynamic> toJson() => _$CategoryNodeToJson(this);
 
   static List<CategoryNode> listFromJson(dynamic json, {bool growable = false,}) {
     final result = <CategoryNode>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
-        final value = CategoryNode.fromJson(row);
-        if (value != null) {
-          result.add(value);
-        }
+        final value = CategoryNode.fromJson(row as Map<String, dynamic>);
+        result.add(value);
       }
     }
     return result.toList(growable: growable);
@@ -99,37 +54,17 @@ class CategoryNode extends Schema {
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = CategoryNode.fromJson(entry.value);
-        if (value != null) {
-          map[entry.key] = value;
-        }
+        final value = CategoryNode.fromJson(entry.value as Map<String, dynamic>);
+        map[entry.key] = value;
       }
     }
     return map;
   }
-
-  // maps a json object with a list of CategoryNode-objects as value to a dart map
-  static Map<String, List<CategoryNode>> mapListFromJson(dynamic json, {bool growable = false,}) {
-    final map = <String, List<CategoryNode>>{};
-    if (json is Map && json.isNotEmpty) {
-      // ignore: parameter_assignments
-      json = json.cast<String, dynamic>();
-      for (final entry in json.entries) {
-        map[entry.key] = CategoryNode.listFromJson(entry.value, growable: growable,);
-      }
-    }
-    return map;
-  }
-
-  /// The list of required keys that must be present in a JSON.
-  static const requiredKeys = <String>{
-  };
 }
 
-/// Factory for creating [CategoryNode] instances from JSON data.
 class CategoryNodeFactory extends JsonSchemaFactory<CategoryNode> {
   const CategoryNodeFactory();
 
   @override
-  CategoryNode fromJson(dynamic json) => CategoryNode.fromJson(json)!;
+  CategoryNode fromJson(dynamic json) => CategoryNode.fromJson(json as Map<String, dynamic>);
 }

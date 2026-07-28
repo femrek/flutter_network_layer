@@ -1,0 +1,4 @@
+generatorName: dart-network
+
+additionalProperties:
+  serializationLibrary: "json_serializable"

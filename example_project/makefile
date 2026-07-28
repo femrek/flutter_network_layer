@@ -1,10 +1,11 @@
 OPENAPI_CODEGEN_VERSION := 7.24.0
 OPENAPI_CODEGEN_JAR := ./openapi-generator-cli-$(OPENAPI_CODEGEN_VERSION).jar
-CUSTOM_CODEGEN_VERSION := 0.1.20
+CUSTOM_CODEGEN_VERSION := 0.1.21
 CUSTOM_CODEGEN_JAR := ./openapi-dart-network-codegen-$(CUSTOM_CODEGEN_VERSION).jar
 SPEC_FILE_NAME := ./openapi-spec.json
 SPEC_FILE_URL := https://dummyapi.femrek.dev/v3/api-docs
 GENERATOR := dart-network
+GENERATOR_CONFIG_FILE := ./openapi-generator-config.yaml
 
 download-openapi-cli-if-not-exists:
 	# Check if the OpenAPI Generator CLI jar file exists, and download it if it doesn't
@@ -35,7 +36,8 @@ generate: download-openapi-cli-if-not-exists download-codegen-if-not-exists down
 	java -cp $(OPENAPI_CODEGEN_JAR):$(CUSTOM_CODEGEN_JAR) org.openapitools.codegen.OpenAPIGenerator generate \
 	   -i $(SPEC_FILE_NAME) \
 	   -g $(GENERATOR) \
+	   -c $(GENERATOR_CONFIG_FILE) \
 	   -o $(OUTPUT_DIR)
 
 generate-and-pub-get: generate
-	cd $(OUTPUT_DIR) && flutter pub get
+	cd $(OUTPUT_DIR) && flutter pub get && dart run build_runner build

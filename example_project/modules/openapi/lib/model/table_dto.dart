@@ -8,7 +8,15 @@
 // ignore_for_file: lines_longer_than_80_chars
 
 import 'package:dart_network_layer_core/dart_network_layer_core.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'table_dto.g.dart';
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class TableDTO extends Schema {
   /// Returns a new [TableDTO] instance.
   TableDTO({
@@ -18,120 +26,31 @@ class TableDTO extends Schema {
     this.status,
   });
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
+  @JsonKey(name: r'id')
   final int? id;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
+  @JsonKey(name: r'name')
   final String? name;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
+  @JsonKey(name: r'capacity')
   final int? capacity;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
+  @JsonKey(name: r'status')
   final String? status;
 
   /// The factory instance for creating [TableDTO] from JSON.
   static const factory = TableDTOFactory();
 
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is TableDTO &&
-    other.id == id &&
-    other.name == name &&
-    other.capacity == capacity &&
-    other.status == status;
+  factory TableDTO.fromJson(Map<String, dynamic> json) => _$TableDTOFromJson(json);
 
-  @override
-  int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (id == null ? 0 : id!.hashCode) +
-    (name == null ? 0 : name!.hashCode) +
-    (capacity == null ? 0 : capacity!.hashCode) +
-    (status == null ? 0 : status!.hashCode);
-
-  @override
-  String toString() => 'TableDTO[id=$id, name=$name, capacity=$capacity, status=$status]';
-
-  Map<String, dynamic> toJson() {
-    final json = <String, dynamic>{};
-    if (this.id != null) {
-      json[r'id'] = this.id;
-    } else {
-      json[r'id'] = null;
-    }
-    if (this.name != null) {
-      json[r'name'] = this.name;
-    } else {
-      json[r'name'] = null;
-    }
-    if (this.capacity != null) {
-      json[r'capacity'] = this.capacity;
-    } else {
-      json[r'capacity'] = null;
-    }
-    if (this.status != null) {
-      json[r'status'] = this.status;
-    } else {
-      json[r'status'] = null;
-    }
-    return json;
-  }
-
-  /// Returns a new [TableDTO] instance and imports its values from
-  /// [value] if it's a [Map], null otherwise.
-  // ignore: prefer_constructors_over_static_methods
-  static TableDTO? fromJson(dynamic value) {
-    if (value is Map) {
-      final json = value.cast<String, dynamic>();
-
-      // Ensure that the map contains the required keys.
-      // Note 1: the values aren't checked for validity beyond being non-null.
-      // Note 2: this code is stripped in release mode!
-      assert(() {
-        requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "TableDTO[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "TableDTO[$key]" has a null value in JSON.');
-        });
-        return true;
-      }());
-
-      return TableDTO(
-        id: json[r'id'] is int ? json[r'id'] as int : null,
-        name: json[r'name'] is String ? json[r'name'] as String : null,
-        capacity: json[r'capacity'] is int ? json[r'capacity'] as int : null,
-        status: json[r'status'] is String ? json[r'status'] as String : null,
-      );
-    }
-    return null;
-  }
+  Map<String, dynamic> toJson() => _$TableDTOToJson(this);
 
   static List<TableDTO> listFromJson(dynamic json, {bool growable = false,}) {
     final result = <TableDTO>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
-        final value = TableDTO.fromJson(row);
-        if (value != null) {
-          result.add(value);
-        }
+        final value = TableDTO.fromJson(row as Map<String, dynamic>);
+        result.add(value);
       }
     }
     return result.toList(growable: growable);
@@ -142,37 +61,17 @@ class TableDTO extends Schema {
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = TableDTO.fromJson(entry.value);
-        if (value != null) {
-          map[entry.key] = value;
-        }
+        final value = TableDTO.fromJson(entry.value as Map<String, dynamic>);
+        map[entry.key] = value;
       }
     }
     return map;
   }
-
-  // maps a json object with a list of TableDTO-objects as value to a dart map
-  static Map<String, List<TableDTO>> mapListFromJson(dynamic json, {bool growable = false,}) {
-    final map = <String, List<TableDTO>>{};
-    if (json is Map && json.isNotEmpty) {
-      // ignore: parameter_assignments
-      json = json.cast<String, dynamic>();
-      for (final entry in json.entries) {
-        map[entry.key] = TableDTO.listFromJson(entry.value, growable: growable,);
-      }
-    }
-    return map;
-  }
-
-  /// The list of required keys that must be present in a JSON.
-  static const requiredKeys = <String>{
-  };
 }
 
-/// Factory for creating [TableDTO] instances from JSON data.
 class TableDTOFactory extends JsonSchemaFactory<TableDTO> {
   const TableDTOFactory();
 
   @override
-  TableDTO fromJson(dynamic json) => TableDTO.fromJson(json)!;
+  TableDTO fromJson(dynamic json) => TableDTO.fromJson(json as Map<String, dynamic>);
 }
