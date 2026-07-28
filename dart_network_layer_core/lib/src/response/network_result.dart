@@ -50,7 +50,11 @@ final class SpecifiedResponseResult<T extends Schema>
   final Map<String, List<String>> headers;
 }
 
-/// The standard response result of a request.
+/// The expected response result of a request.
+///
+/// Even if the response code in specified in response factories in request
+/// command, it can still be a [SuccessResponseResult] if the default response
+/// factory can resolve it.
 final class SuccessResponseResult<T extends Schema>
     extends SpecifiedResponseResult<T> {
   /// Creates a success response result.
@@ -76,6 +80,9 @@ final class SuccessResponseResult<T extends Schema>
 /// The error response result of a request, if no response is received from the
 /// server. It can be used for network errors, timeouts, or any other errors
 /// that occur before receiving a response from the server.
+///
+/// Also response serialization errors returns an [NetworkErrorResult] with
+/// [NetworkErrorInvalidResponseType] instance in [error] field.
 final class NetworkErrorResult<T extends Schema> extends NetworkResult<T> {
   /// Creates a no response result, if no response is received from the server.
   /// [error] is the error that caused the failure. It must not be null.
