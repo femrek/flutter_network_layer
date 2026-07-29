@@ -1,10 +1,11 @@
 import 'package:dart_network_layer_dio/dart_network_layer_dio.dart';
 import 'package:dio/dio.dart';
-import 'package:logging/logging.dart';
+import 'package:remote_logging/remote_logging.dart';
 
 /// A custom network invoker that extends the [DioNetworkInvoker] and can be
 /// used to add custom functionality or configuration to the network invoker.
-class CustomNetworkInvoker extends DioNetworkInvoker {
+class CustomNetworkInvoker extends DioNetworkInvoker
+    with LoggerMixin<CustomNetworkInvoker> {
   /// Creates an instance of [CustomNetworkInvoker] with the given [Dio]
   /// instance. You can customize the [Dio] instance before passing it to the
   /// super constructor.
@@ -18,14 +19,12 @@ class CustomNetworkInvoker extends DioNetworkInvoker {
         ),
       );
 
-  final Logger _log = Logger('CustomNetworkInvoker');
-
   @override
   Future<NetworkResult<T>> send<T extends Schema>(
     RequestCommand<T> request,
   ) async {
-    _log.info(
-      'CustomNetworkInvoker: Making a request to'
+    log.info(
+      'Making a request: '
       ' ${request.method} ${request.path}',
     );
     return super.send(request);

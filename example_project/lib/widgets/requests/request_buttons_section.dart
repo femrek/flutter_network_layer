@@ -2,18 +2,16 @@ import 'dart:io';
 
 import 'package:dart_network_layer_dio/dart_network_layer_dio.dart';
 import 'package:flutter/material.dart';
-import 'package:logging/logging.dart';
 import 'package:openapi/api.dart' hide Widget;
 import 'package:path_provider/path_provider.dart';
+import 'package:remote_logging/remote_logging.dart';
 
 part '_bulk_buttons.dart';
-
 part '_complex_buttons.dart';
-
-part '_table_buttons.dart';
+part '_crud_buttons.dart';
 
 /// Section displaying request buttons in three horizontal-scrolling rows,
-/// grouped by API category: Tables, Bulks, and Complexes.
+/// grouped by API category: CRUDs, Bulks, and Complexes.
 class RequestButtonsSection extends StatelessWidget {
   /// Creates an instance of [RequestButtonsSection] with the given [invoker].
   const RequestButtonsSection({required this.invoker, super.key});
@@ -30,10 +28,10 @@ class RequestButtonsSection extends StatelessWidget {
         children: [
           _buildRow(
             context,
-            label: 'Tables',
+            label: 'Basic CRUD Operations',
             icon: Icons.table_chart,
             color: Colors.indigo,
-            child: _TableButtons(invoker: invoker),
+            child: _CrudButtons(invoker: invoker),
           ),
           const SizedBox(height: 4),
           _buildRow(
@@ -114,5 +112,37 @@ class _RequestButton extends StatelessWidget {
         onPressed: onPressed,
       ),
     );
+  }
+}
+
+void _logNetworkResult<T extends Schema>(
+  Logger log,
+  String actionName,
+  NetworkResult<T> result, {
+  Object? Function(T data)? successFormatter,
+}) {
+  switch (result) {
+    case SuccessResponseResult<T>():
+      final formattedData = successFormatter != null
+          ? successFormatter(result.data)
+          : result.data.runtimeType;
+      log.info('$actionName successful: $formattedData');
+    case SpecifiedResponseResult<T>():
+      log.severe(
+        '$actionName failed with response: ${result.data.runtimeType}',
+      );
+    case NetworkErrorResult<T>(:final error):
+      final lowerAction = actionName.toLowerCase();
+      if (error is NetworkErrorInvalidResponseType) {
+        log.severe(
+          'Invalid response type during $lowerAction: '
+          '<${error.statusCode}> ${error.response.runtimeType}',
+        );
+      }
+      log.severe(
+        'Network error during $lowerAction: ${result.error}',
+        result.error,
+        result.error.stackTrace,
+      );
   }
 }

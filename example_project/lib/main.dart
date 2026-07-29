@@ -1,21 +1,45 @@
+import 'dart:async';
+import 'dart:ui';
+
 import 'package:example_project/network/app_repos.dart';
 import 'package:example_project/pages/dashboard_page.dart';
 import 'package:flutter/material.dart';
-import 'package:logging/logging.dart';
+import 'package:remote_logging/remote_logging.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+void main() {
+  runZonedGuarded(
+    () {
+      WidgetsFlutterBinding.ensureInitialized();
 
-  Logger.root.level = Level.ALL;
-  Logger.root.onRecord.listen((record) {
-    debugPrint(
-      '[${record.loggerName}] ${record.level.name}: '
-      '${record.time}: ${record.message}',
-    );
-  });
+      // logging
+      RemoteLogging.initLocalOnly(
+        config: const RemoteLoggingConfig(
+          enableRemoteLogging: false,
+        ),
+      );
+      FlutterError.onError = (errorDetails) {
+        FlutterError.presentError(errorDetails);
+        logger('main').severe(
+          'unhandled error:',
+          errorDetails.exception,
+          errorDetails.stack,
+        );
+      };
 
-  final appRepos = AppRepos();
-  runApp(App(repos: appRepos));
+      PlatformDispatcher.instance.onError = (error, stack) {
+        logger('main').severe('unhandled error:', error, stack);
+        return true;
+      };
+
+      final appRepos = AppRepos();
+
+      runApp(App(repos: appRepos));
+    },
+    (error, stackTrace) {
+      logger('main').severe('unhandled error:', error, stackTrace);
+    },
+    zoneValues: {'name': 'main'},
+  );
 }
 
 /// The root of the application

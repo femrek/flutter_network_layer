@@ -1,9 +1,7 @@
 part of 'request_buttons_section.dart';
 
-class _BulkButtons extends StatelessWidget {
-  const _BulkButtons({
-    required this.invoker,
-  });
+class _BulkButtons extends StatelessWidget with LoggerMixin<_BulkButtons> {
+  _BulkButtons({required this.invoker});
 
   final DioNetworkInvoker invoker;
 
@@ -16,9 +14,12 @@ class _BulkButtons extends StatelessWidget {
         _RequestButton(
           label: 'Bulk Download',
           icon: Icons.download,
-          onPressed: () => invoker.send(
-            BulkDownloadCommand(datasetId: 'sample-dataset'),
-          ),
+          onPressed: () async {
+            final result = await invoker.send(
+              BulkDownloadCommand(datasetId: 'sample-dataset'),
+            );
+            _logNetworkResult(log, 'Bulk download', result);
+          },
         ),
         _RequestButton(
           label: 'Bulk Upload (Image)',
@@ -28,11 +29,10 @@ class _BulkButtons extends StatelessWidget {
             final filePath = '${dir.path}/hn_ss.jpg';
             final file = File(filePath);
             if (!file.existsSync()) {
-              Logger(
-                '_BulkButtons',
-              ).severe('File not found. download the image first');
+              log.severe('File not found. download the image first');
+              return;
             }
-            await invoker.send(
+            final result = await invoker.send(
               BulkUploadCommand(
                 file: FileMultipartFileSchema(
                   filename: 'hn_ss.jpg',
@@ -45,14 +45,27 @@ class _BulkButtons extends StatelessWidget {
                 ),
               ),
             );
+
+            _logNetworkResult(
+              log,
+              'Bulk upload',
+              result,
+              successFormatter: (data) => data.toJson(),
+            );
           },
         ),
         _RequestButton(
           label: 'Get Job Status',
           icon: Icons.pending_actions,
-          onPressed: () => invoker.send(
-            GetJobStatusCommand(jobId: '1', level: GetJobStatusLevelEnum.FULL),
-          ),
+          onPressed: () async {
+            final result = await invoker.send(
+              GetJobStatusCommand(
+                jobId: '1',
+                level: GetJobStatusLevelEnum.FULL,
+              ),
+            );
+            _logNetworkResult(log, 'Get job status', result);
+          },
         ),
         _RequestButton(
           label: 'Image Download',
@@ -60,11 +73,12 @@ class _BulkButtons extends StatelessWidget {
           onPressed: () async {
             final dir = await getApplicationCacheDirectory();
             final filePath = '${dir.path}/hn_ss.jpg';
-            await invoker.send(
+            final result = await invoker.send(
               GetSampleImageCommand(
                 binaryResponseType: FileBinaryResponse(filePath),
               ),
             );
+            _logNetworkResult(log, 'Image download', result);
           },
         ),
       ],

@@ -50,9 +50,9 @@ class RequestDetailDialog extends StatelessWidget {
     if (result == null) return 'No response';
     switch (result) {
       case final SuccessResponseResult<T> r:
-        return 'Success: ${r.statusCode} ${r.data}';
+        return 'Success: ${r.statusCode} ${r.data.toLogString()}';
       case final SpecifiedResponseResult<T> r:
-        return 'Specified: ${r.statusCode} ${r.data}';
+        return 'Specified: ${r.statusCode} ${r.data.toLogString()}';
       case final NetworkErrorResult<T> r:
         return 'Error: ${r.error}';
     }

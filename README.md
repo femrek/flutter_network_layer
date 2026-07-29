@@ -4,7 +4,8 @@ Multi-package network layer for Dart and Flutter projects.
 
 ## Features
 
-- 🏗️ **Core Abstractions:** Defines strong network contracts (`INetworkInvoker`, `RequestCommand`) free from third-party dependencies.
+- 🏗️ **Core Abstractions:** Defines strong network contracts (`INetworkInvoker`, `RequestCommand`) free from third-party
+  dependencies.
 - 🚀 **Dio Implementation:** Ready-to-use Dio integration (`dart_network_layer_dio`) for production apps.
 - 📦 **File Transfers:** Built-in support for multipart file uploads and binary file downloads.
 - 🛠️ **OpenAPI Friendly:** Easily works with OpenAPI-generated request/response models.
@@ -30,15 +31,18 @@ Use the up-to-date guides in `docs/`:
 ## Example Project
 
 See [`example_project`][gh_example_flutter_dio] for a full Flutter integration,
-including OpenAPI-generated commands and custom invoker extensions.
+including OpenAPI-generated commands.
 
 ## License
 
 Released under the [MIT License](LICENSE).
 
 [gh_dart_network_layer_core]: https://github.com/femrek/dart_network_layer/tree/main/dart_network_layer_core
+
 [pd_dart_network_layer_core]: https://pub.dev/packages/dart_network_layer_core
+
 [gh_dart_network_layer_dio]: https://github.com/femrek/dart_network_layer/tree/main/dart_network_layer_dio
+
 [pd_dart_network_layer_dio]: https://pub.dev/packages/dart_network_layer_dio
 
 [gh_example_flutter_dio]: https://github.com/femrek/dart_network_layer/tree/main/example_project
