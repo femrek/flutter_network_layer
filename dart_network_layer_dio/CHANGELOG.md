@@ -1,3 +1,26 @@
+## 1.0.0 - 2026-07-29
+
+
+
+### 🚀 Features
+
+- Feat(example): update OpenAPI generator version and switched to json_serializable.
+
+- Feat: add support for QUERY HTTP request method and corresponding test cases
+
+- Feat(example): replace logging package with remote_logging and enhance logging in network invoker and request buttons
+
+
+
+### 📚 Documentation
+
+- Docs(core): clarify documentation for response result classes
+
+- Docs: update README to include new features and enhancements
+
+- Docs: update license section in README to specify MIT License
+
+
 ## 1.0.0-rc.13 - 2026-07-22
 
 ### 🚀 Features
