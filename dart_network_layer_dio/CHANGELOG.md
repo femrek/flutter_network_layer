@@ -1,3 +1,12 @@
+## 1.0.1 - 2026-08-22
+
+
+
+### 🚀 Features
+
+- Feat: add DisabledNetworkLogger implementation to disable logging
+
+
 ## 1.0.0 - 2026-07-29
 
 
